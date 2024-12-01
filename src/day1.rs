@@ -14,7 +14,7 @@ fn parse(input: &str) -> (Vec<u64>, Vec<u64>) {
         g1s.push(g1);
         g2s.push(g2);
     }
-    return (g1s, g2s);
+    (g1s, g2s)
 }
 
 #[aoc(day1, part1)]
@@ -33,7 +33,7 @@ fn part1(input: &(Vec<u64>, Vec<u64>)) -> String {
         dist += ma - mi;
     }
     println!("{dist}");
-    return dist.to_string();
+    dist.to_string()
 }
 
 #[aoc(day1, part2)]
@@ -42,7 +42,7 @@ fn part2(input: &(Vec<u64>, Vec<u64>)) -> String {
     for n1 in input.0.iter() {
         score += n1 * input.1.iter().filter(|n2| n1 == *n2).count() as u64;
     }
-    return score.to_string();
+    score.to_string()
 }
 
 #[cfg(test)]
