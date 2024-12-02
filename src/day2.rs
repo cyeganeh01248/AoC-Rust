@@ -51,7 +51,7 @@ fn part2(input: &[Vec<i32>]) -> String {
             if skip != report.len() {
                 new_report.remove(skip);
             }
-           if is_safe(&new_report) {
+            if is_safe(&new_report) {
                 count += 1;
                 break;
             }
