@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use aoc_runner_derive::{aoc, aoc_generator};
 use regex::Regex;
 #[aoc_generator(day1)]
@@ -27,20 +29,26 @@ fn part1(input: &(Vec<u64>, Vec<u64>)) -> String {
     let mut dist = 0;
 
     for (g1, g2) in g1s.iter().zip(g2s.iter()) {
-        println!("{g1} {g2}");
-        let ma = g1.max(g2);
-        let mi = g1.min(g2);
-        dist += ma - mi;
+        dist += g1.max(g2) - g1.min(g2);
     }
-    println!("{dist}");
     dist.to_string()
 }
 
 #[aoc(day1, part2)]
 fn part2(input: &(Vec<u64>, Vec<u64>)) -> String {
+    let mut scores = HashMap::new();
+    for n2 in input.1.iter() {
+        scores.entry(n2).and_modify(|n| *n += 1).or_insert(1);
+    }
+
     let mut score = 0;
+
     for n1 in input.0.iter() {
-        score += n1 * input.1.iter().filter(|n2| n1 == *n2).count() as u64;
+        let cnt = match scores.get(n1) {
+            Some(cnt) => *cnt,
+            None => 0,
+        };
+        score += n1 * cnt;
     }
     score.to_string()
 }
