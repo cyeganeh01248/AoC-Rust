@@ -6,5 +6,4 @@ for file in $(ls src | grep day); do
     echo -------------- AoC Day $day --------------
     cargo aoc input -d $day
     cargo aoc -d $day
-    cargo aoc bench -d $day
 done
