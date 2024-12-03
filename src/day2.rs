@@ -1,18 +1,17 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 #[aoc_generator(day2)]
-fn parse(input: &str) -> Vec<Vec<i32>> {
-    let mut output = Vec::new();
-    for line in input.lines() {
-        let values = line
-            .split_whitespace()
-            .map(|n| n.parse().unwrap())
-            .collect();
-        output.push(values);
-    }
-    output
+fn parse(input: &str) -> Vec<Vec<i64>> {
+    input
+        .lines()
+        .map(|line| {
+            line.split_whitespace()
+                .map(|n| n.parse().unwrap())
+                .collect()
+        })
+        .collect()
 }
 
-fn is_safe(report: &[i32]) -> bool {
+fn is_safe(report: &[i64]) -> bool {
     let mut all_ascending = true;
     let mut all_descending = true;
     let mut all_within_1_3 = true;
@@ -32,32 +31,30 @@ fn is_safe(report: &[i32]) -> bool {
 }
 
 #[aoc(day2, part1)]
-fn part1(input: &[Vec<i32>]) -> i32 {
-    let mut count = 0;
-    for report in input.iter() {
-        if is_safe(report) {
-            count += 1;
-        }
-    }
-    count
+fn part1(input: &[Vec<i64>]) -> i64 {
+    input
+        .iter()
+        .map(|report| if is_safe(report) { 1 } else { 0 })
+        .sum()
 }
 
 #[aoc(day2, part2)]
-fn part2(input: &[Vec<i32>]) -> i32 {
-    let mut count = 0;
-    for report in input.iter() {
-        for skip in 0..=report.len() {
-            let mut new_report = report.clone();
-            if skip != report.len() {
-                new_report.remove(skip);
+fn part2(input: &[Vec<i64>]) -> i64 {
+    input
+        .iter()
+        .map(|report| {
+            for skip in 0..=report.len() {
+                let mut new_report = report.clone();
+                if skip != report.len() {
+                    new_report.remove(skip);
+                }
+                if is_safe(&new_report) {
+                    return 1;
+                }
             }
-            if is_safe(&new_report) {
-                count += 1;
-                break;
-            }
-        }
-    }
-    count
+            0
+        })
+        .sum()
 }
 
 #[cfg(test)]

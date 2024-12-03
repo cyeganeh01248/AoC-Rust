@@ -2,51 +2,49 @@ use aoc_runner_derive::{aoc, aoc_generator};
 use regex::Regex;
 #[aoc_generator(day3)]
 fn parse(input: &str) -> String {
-    input.to_string().replace("\n", "")
+    input.replace("\n", "")
 }
 
 #[aoc(day3, part1)]
 fn part1(input: &str) -> i64 {
     let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap();
-    let mut sum = 0;
-    let caps = re.captures_iter(input);
-    for cap in caps {
-        let a = cap.get(1).unwrap().as_str().parse::<i64>().unwrap();
-        let b = cap.get(2).unwrap().as_str().parse::<i64>().unwrap();
-        let c = a * b;
-        sum += c;
-    }
-    sum
+    re.captures_iter(input)
+        .map(|cap| {
+            let a = cap.get(1).unwrap().as_str().parse::<i64>().unwrap();
+            let b = cap.get(2).unwrap().as_str().parse::<i64>().unwrap();
+            a * b
+        })
+        .sum()
 }
 
 #[aoc(day3, part2)]
-fn part2(mut input: &str) -> i64 {
+fn part2(input: &str) -> i64 {
     let mut mode_enabled = true;
-    let re_mul = Regex::new(r"^mul\((\d{1,3}),(\d{1,3})\)").unwrap();
-    let mut sum = 0;
-    while !input.is_empty() {
-        if mode_enabled {
-            if input.starts_with("don't()") {
+    let re_mul = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)").unwrap();
+
+    let t = re_mul
+        .captures_iter(input)
+        .map(|cap| match cap.get(0).unwrap().as_str() {
+            "do()" => {
+                mode_enabled = true;
+                0
+            }
+            "don't()" => {
                 mode_enabled = false;
-                input = &input[7..];
-            } else if let Some(cap) = re_mul.captures(input) {
+                0
+            }
+            _ => {
                 let a = cap.get(1).unwrap().as_str().parse::<i64>().unwrap();
                 let b = cap.get(2).unwrap().as_str().parse::<i64>().unwrap();
-                let c = a * b;
-                sum += c;
-                let l = cap.len();
-                input = &input[l..];
-            } else {
-                input = &input[1..];
+                if mode_enabled {
+                    a * b
+                } else {
+                    0
+                }
             }
-        } else if input.starts_with("do()") {
-            mode_enabled = true;
-            input = &input[4..];
-        } else {
-            input = &input[1..];
-        }
-    }
-    sum
+        })
+        .sum();
+    t
 }
 
 #[cfg(test)]
