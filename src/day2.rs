@@ -32,18 +32,18 @@ fn is_safe(report: &[i32]) -> bool {
 }
 
 #[aoc(day2, part1)]
-fn part1(input: &[Vec<i32>]) -> String {
+fn part1(input: &[Vec<i32>]) -> i32 {
     let mut count = 0;
     for report in input.iter() {
         if is_safe(report) {
             count += 1;
         }
     }
-    count.to_string()
+    count
 }
 
 #[aoc(day2, part2)]
-fn part2(input: &[Vec<i32>]) -> String {
+fn part2(input: &[Vec<i32>]) -> i32 {
     let mut count = 0;
     for report in input.iter() {
         for skip in 0..=report.len() {
@@ -57,7 +57,7 @@ fn part2(input: &[Vec<i32>]) -> String {
             }
         }
     }
-    count.to_string()
+    count
 }
 
 #[cfg(test)]
@@ -75,7 +75,7 @@ mod tests {
 8 6 4 4 1
 1 3 6 7 9"
             )),
-            "2"
+            2
         );
     }
 
@@ -90,7 +90,7 @@ mod tests {
 8 6 4 4 1
 1 3 6 7 9"
             )),
-            "4"
+            4
         );
     }
 }

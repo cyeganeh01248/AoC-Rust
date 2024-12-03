@@ -20,7 +20,7 @@ fn parse(input: &str) -> (Vec<u64>, Vec<u64>) {
 }
 
 #[aoc(day1, part1)]
-fn part1(input: &(Vec<u64>, Vec<u64>)) -> String {
+fn part1(input: &(Vec<u64>, Vec<u64>)) -> u64 {
     let mut g1s = input.0.clone();
     let mut g2s = input.1.clone();
     g1s.sort();
@@ -31,11 +31,11 @@ fn part1(input: &(Vec<u64>, Vec<u64>)) -> String {
     for (g1, g2) in g1s.iter().zip(g2s.iter()) {
         dist += g1.max(g2) - g1.min(g2);
     }
-    dist.to_string()
+    dist
 }
 
 #[aoc(day1, part2)]
-fn part2(input: &(Vec<u64>, Vec<u64>)) -> String {
+fn part2(input: &(Vec<u64>, Vec<u64>)) -> u64 {
     let mut scores = HashMap::new();
     for n2 in input.1.iter() {
         scores.entry(n2).and_modify(|n| *n += 1).or_insert(1);
@@ -50,7 +50,7 @@ fn part2(input: &(Vec<u64>, Vec<u64>)) -> String {
         };
         score += n1 * cnt;
     }
-    score.to_string()
+    score
 }
 
 #[cfg(test)]
@@ -68,7 +68,7 @@ mod tests {
 3   9
 3   3"
             )),
-            "11"
+            11
         );
     }
 
@@ -83,7 +83,7 @@ mod tests {
 3   9
 3   3"
             )),
-            "31"
+            31
         );
     }
 }
