@@ -18,10 +18,6 @@ where
         .collect()
 }
 
-pub fn char_grid(input: &str) -> Vec<Vec<char>> {
-    v_grid_no_whitespace(input)
-}
-
 pub fn v_grid_no_whitespace<T>(input: &str) -> Vec<Vec<T>>
 where
     T: FromStr,
@@ -37,4 +33,8 @@ where
                 .collect()
         })
         .collect()
+}
+
+pub fn lines(input: &str) -> Vec<String> {
+    input.lines().map(|line| line.to_string()).collect()
 }
