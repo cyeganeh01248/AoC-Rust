@@ -1,14 +1,10 @@
 use aoc_runner_derive::{aoc, aoc_generator};
+
+use crate::parsers::v_grid_by_whitespace;
+
 #[aoc_generator(day2)]
 fn parse(input: &str) -> Vec<Vec<i64>> {
-    input
-        .lines()
-        .map(|line| {
-            line.split_whitespace()
-                .map(|n| n.parse().unwrap())
-                .collect()
-        })
-        .collect()
+    v_grid_by_whitespace(input)
 }
 
 fn is_safe(report: &[i64]) -> bool {

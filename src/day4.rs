@@ -1,40 +1,27 @@
 use aoc_runner_derive::{aoc, aoc_generator};
+
+use crate::parsers::v_grid_no_whitespace;
 #[aoc_generator(day4)]
 fn parse(input: &str) -> Vec<Vec<char>> {
-    input
-        .split("\n")
-        .map(|line| line.chars().collect())
-        .collect()
+    v_grid_no_whitespace(input)
 }
 
 #[aoc(day4, part1)]
 fn part1(input: &[Vec<char>]) -> usize {
-    const XMAS: &str = "XMAS";
     let mut count = 0;
     for row in 0..(input.len() as isize) {
         for col in 0..(input[row as usize].len() as isize) {
-            if input[row as usize][col as usize] != 'X' {
-                continue;
-            }
-            for (rowi, coli) in [
-                (0, 1),
-                (1, 1),
-                (1, 0),
-                (1, -1),
-                (0, -1),
-                (-1, -1),
-                (-1, 0),
-                (-1, 1),
-            ] {
+            for (rowi, coli) in [(0, 1), (1, 1), (1, 0), (1, -1)] {
                 let mut word = String::new();
-                word.push('X');
+                word.push(input[row as usize][col as usize]);
                 for i in 1..4 {
                     let rp = row + rowi * i;
                     let cp = col + coli * i;
-                    if rp < 0 || rp >= input.len() as isize {
-                        break;
-                    }
-                    if cp < 0 || cp >= input[row as usize].len() as isize {
+                    if rp < 0
+                        || rp >= input.len() as isize
+                        || cp < 0
+                        || cp >= input[row as usize].len() as isize
+                    {
                         break;
                     }
                     word.push(input[rp as usize][cp as usize]);
@@ -42,7 +29,7 @@ fn part1(input: &[Vec<char>]) -> usize {
                 if word.len() < 4 {
                     continue;
                 }
-                if word == XMAS {
+                if word == "XMAS" || word == "SAMX" {
                     count += 1;
                 }
             }
