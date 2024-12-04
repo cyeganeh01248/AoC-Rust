@@ -9,9 +9,13 @@ fn parse(input: &str) -> Vec<Vec<char>> {
 
 #[aoc(day4, part1)]
 fn part1(input: &[Vec<char>]) -> usize {
+    const XMAS: &str = "XMAS";
     let mut count = 0;
     for row in 0..(input.len() as isize) {
         for col in 0..(input[row as usize].len() as isize) {
+            if input[row as usize][col as usize] != 'X' {
+                continue;
+            }
             for (rowi, coli) in [
                 (0, 1),
                 (1, 1),
@@ -23,7 +27,8 @@ fn part1(input: &[Vec<char>]) -> usize {
                 (-1, 1),
             ] {
                 let mut word = String::new();
-                for i in 0..4 {
+                word.push('X');
+                for i in 1..4 {
                     let rp = row + rowi * i;
                     let cp = col + coli * i;
                     if rp < 0 || rp >= input.len() as isize {
@@ -37,7 +42,7 @@ fn part1(input: &[Vec<char>]) -> usize {
                 if word.len() < 4 {
                     continue;
                 }
-                if word == "XMAS" {
+                if word == XMAS {
                     count += 1;
                 }
             }
@@ -51,6 +56,9 @@ fn part2(input: &[Vec<char>]) -> usize {
     let mut count = 0;
     for row in 1..(input.len() as isize - 1) {
         for col in 1..(input[row as usize].len() as isize - 1) {
+            if input[row as usize][col as usize] != 'A' {
+                continue;
+            }
             let mut word = String::new();
             for (rowi, coli) in [(-1, -1), (0, 0), (1, 1), (-1, 1), (1, -1)] {
                 let rp = row + rowi;
