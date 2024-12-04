@@ -1,3 +1,5 @@
+default: run
+
 test:
     cargo test
 
@@ -36,7 +38,6 @@ fetch-inputs:
         day=${file:3:1}
         echo -------------- AoC Day $day --------------
         cargo aoc input -d $day
-        echo $?
     done
 
 clean:
@@ -49,6 +50,6 @@ lint:
 [confirm("Are you sure you want to commit for the day?")]
 git-complete-day DAY:
     #!/usr/bin/env bash
-    git add .
-    git commit -m "Completed AoC Day {{DAY}}"
+    git add . && \
+    git commit -m "Completed day {{DAY}}" && \
     git push
