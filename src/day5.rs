@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{cmp::Ordering, collections::HashMap};
 
 use aoc_runner_derive::{aoc, aoc_generator};
 #[aoc_generator(day5)]
@@ -16,7 +16,10 @@ fn parse(input: &str) -> (HashMap<i64, Vec<i64>>, Vec<Vec<i64>>) {
         let b = parts.next().unwrap().parse().unwrap();
 
         keys.entry(a)
-            .and_modify(|li: &mut Vec<i64>| li.push(b))
+            .and_modify(|li: &mut Vec<i64>| {
+                li.push(b);
+                li.sort_unstable()
+            })
             .or_insert(vec![b]);
         i += 1;
     }
@@ -29,50 +32,65 @@ fn parse(input: &str) -> (HashMap<i64, Vec<i64>>, Vec<Vec<i64>>) {
             break;
         }
         let line = lines[i];
-        let mut page: Vec<i64> = line.split(",").map(|s| s.parse().unwrap()).collect();
-        page.sort_unstable();
+        let page: Vec<i64> = line.split(",").map(|s| s.parse().unwrap()).collect();
         pages.push(page);
         i += 1;
     }
     (keys, pages)
 }
 
-#[aoc(day5, part1)]
-fn part1((keys, pages): &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
-    println!("{keys:?}");
-    println!("{pages:?}");
-    let mut count = 0;
-    for page in pages {
-        let mut add = true;
-        println!("{page:?}");
-        for i in 0..(page.len() - 1) {
-            for j in (i + 1)..(page.len()) {
-                let a = page[i];
-                let b = page[j];
-
-                if let Some(li) = keys.get(&b) {
-                    if li.contains(&a) {
-                        add = false;
-                        // break;
-                    }
+fn correctly_ordered(page: &[i64], keys: &HashMap<i64, Vec<i64>>) -> bool {
+    for i in 0..(page.len() - 1) {
+        for j in (i + 1)..(page.len()) {
+            let a = page[i];
+            let b = page[j];
+            if let Some(b_list) = keys.get(&b) {
+                if b_list.contains(&a) {
+                    return false;
                 }
-                println!("{add} {a} {b} {:?} {:?}", keys.get(&a), keys.get(&b))
             }
-            if !add {
-                break;
-            }
-        }
-        if add {
-            count += 1;
         }
     }
-    println!("{count}");
-    todo!()
+    true
+}
+#[aoc(day5, part1)]
+fn part1((keys, pages): &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
+    pages
+        .iter()
+        .map(|page| {
+            if correctly_ordered(page, keys) {
+                return page[page.len() / 2];
+            }
+            0
+        })
+        .sum()
 }
 
 #[aoc(day5, part2)]
-fn part2(input: &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
-    todo!()
+fn part2((keys, pages): &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
+    pages
+        .iter()
+        .map(|page| {
+            let mut page = page.clone();
+            if !correctly_ordered(&page, keys) {
+                page.sort_by(|a, b| {
+                    if let Some(a_list) = keys.get(a) {
+                        if a_list.contains(b) {
+                            return Ordering::Less;
+                        }
+                    }
+                    if let Some(b_list) = keys.get(b) {
+                        if b_list.contains(a) {
+                            return Ordering::Greater;
+                        }
+                    }
+                    Ordering::Equal
+                });
+                return page[page.len() / 2];
+            }
+            0
+        })
+        .sum()
 }
 
 #[cfg(test)]
@@ -118,6 +136,38 @@ mod tests {
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(&parse("<EXAMPLE>")), 0);
+        assert_eq!(
+            part2(&parse(
+                "47|53
+97|13
+97|61
+97|47
+75|29
+61|13
+75|53
+29|13
+97|29
+53|29
+61|53
+97|53
+61|29
+47|13
+75|47
+97|75
+47|61
+75|61
+47|29
+75|13
+53|13
+
+75,47,61,53,29
+97,61,53,29,13
+75,29,13
+75,97,47,61,53
+61,13,29
+97,13,75,29,47"
+            )),
+            123
+        );
     }
 }
