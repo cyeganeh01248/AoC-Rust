@@ -16,8 +16,7 @@ gen:
 
 run-all:
     #!/usr/bin/env bash
-    for file in $(ls src | grep day); do
-        day=${file:3:1}
+    for day in $(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h); do
         echo -------------- AoC Day $day --------------
         cargo aoc input -d $day
         cargo aoc -d $day
@@ -25,8 +24,7 @@ run-all:
 
 bench-all:
     #!/usr/bin/env bash
-    for file in $(ls src | grep day); do
-        day=${file:3:1}
+    for day in $(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h); do
         echo -------------- AoC Day $day --------------
         cargo aoc input -d $day
         cargo aoc bench -d $day
@@ -34,10 +32,14 @@ bench-all:
 
 fetch-inputs:
     #!/usr/bin/env bash
-    for file in $(ls src | grep day); do
-        day=${file:3:1}
+    for day in $(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h); do
         echo -------------- AoC Day $day --------------
-        cargo aoc input -d $day
+        cargo aoc input -d $day &> /dev/null
+        if [ $? -ne 0 ]; then
+            echo "Failed to fetch input for day $day"
+        else
+            echo "Fetched input for day $day"
+        fi
     done
 
 clean:
