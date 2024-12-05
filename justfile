@@ -1,18 +1,40 @@
 default: run
 
-test:
-    cargo test
+test DAY="":
+    #!/usr/bin/env bash
+    day={{DAY}}
 
-run:
-    cargo aoc input
-    cargo aoc
+    if [ "$day" == "" ]; then
+        day=$(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h -r | head -n 1)
+    fi
+    cargo test day${day}
 
-bench:
-    cargo aoc input
-    cargo aoc bench
+run DAY="":
+    #!/usr/bin/env bash
+    day={{DAY}}
+
+    if [ "$day" == "" ]; then
+        day=$(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h -r | head -n 1)
+    fi
+    cargo aoc input -d $day
+    cargo aoc -d $day
+
+bench DAY="":
+    #!/usr/bin/env bash
+    day={{DAY}}
+
+    if [ "$day" == "" ]; then
+        day=$(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h -r | head -n 1)
+    fi
+
+    cargo aoc input -d $day
+    cargo aoc bench -d $day
 
 gen:
     cargo aoc input -g
+
+test-all:
+    cargo test day
 
 run-all:
     #!/usr/bin/env bash
