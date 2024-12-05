@@ -8,7 +8,7 @@ fn parse(input: &str) -> (HashMap<i64, Vec<i64>>, Vec<Vec<i64>>) {
     let mut i = 0;
     loop {
         let line = lines[i];
-        if line == "" {
+        if line.is_empty() {
             break;
         }
         let mut parts = line.split("|");
