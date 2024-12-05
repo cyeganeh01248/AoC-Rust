@@ -39,29 +39,23 @@ fn parse(input: &str) -> (HashMap<i64, Vec<i64>>, Vec<Vec<i64>>) {
     (keys, pages)
 }
 
-fn correctly_ordered(page: &[i64], keys: &HashMap<i64, Vec<i64>>) -> bool {
-    for i in 0..(page.len() - 1) {
-        for j in (i + 1)..(page.len()) {
-            let a = page[i];
-            let b = page[j];
-            if let Some(b_list) = keys.get(&b) {
-                if b_list.contains(&a) {
-                    return false;
-                }
-            }
-        }
-    }
-    true
-}
 #[aoc(day5, part1)]
 fn part1((keys, pages): &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
     pages
         .iter()
         .map(|page| {
-            if correctly_ordered(page, keys) {
-                return page[page.len() / 2];
+            // let mut page = page.clone();
+            // let page_og = page.clone();
+            for i in 0..(page.len() - 1) {
+                if match sort_fn(&page[i], &page[i + 1], keys) {
+                    Ordering::Less => false,
+                    Ordering::Equal => false,
+                    Ordering::Greater => true,
+                } {
+                    return 0;
+                }
             }
-            0
+            page[page.len() / 2]
         })
         .sum()
 }
@@ -71,26 +65,37 @@ fn part2((keys, pages): &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
     pages
         .iter()
         .map(|page| {
-            let mut page = page.clone();
-            if !correctly_ordered(&page, keys) {
-                page.sort_by(|a, b| {
-                    if let Some(a_list) = keys.get(a) {
-                        if a_list.contains(b) {
-                            return Ordering::Less;
-                        }
-                    }
-                    if let Some(b_list) = keys.get(b) {
-                        if b_list.contains(a) {
-                            return Ordering::Greater;
-                        }
-                    }
-                    Ordering::Equal
-                });
-                return page[page.len() / 2];
+            let mut sorted = true;
+            for i in 0..(page.len() - 1) {
+                sorted = sorted
+                    && match sort_fn(&page[i], &page[i + 1], keys) {
+                        Ordering::Less => true,
+                        Ordering::Equal => true,
+                        Ordering::Greater => false,
+                    };
             }
-            0
+            if sorted {
+                return 0;
+            }
+            let mut page = page.clone();
+            page.sort_by(|a, b| sort_fn(a, b, keys));
+            page[page.len() / 2]
         })
         .sum()
+}
+
+fn sort_fn(a: &i64, b: &i64, keys: &HashMap<i64, Vec<i64>>) -> Ordering {
+    if let Some(a_list) = keys.get(a) {
+        if a_list.contains(b) {
+            return Ordering::Less;
+        }
+    }
+    if let Some(b_list) = keys.get(b) {
+        if b_list.contains(a) {
+            return Ordering::Greater;
+        }
+    }
+    Ordering::Equal
 }
 
 #[cfg(test)]
