@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use aoc_runner_derive::{aoc, aoc_generator};
-use fxhash::{FxHashSet, FxHasher};
+use fxhash::FxHashSet;
 
 use crate::parsers::v_grid_no_whitespace;
 #[aoc_generator(day6)]
@@ -49,7 +49,7 @@ fn part1((grid, (guard_r, guard_c), dir): &(Vec<Vec<char>>, (isize, isize), u8))
     let (raw_results, _) = traverse_grid(&grid, (*guard_r, *guard_c), *dir);
 
     let mut unique_results = HashSet::new();
-    for (dir, r, c) in raw_results {
+    for (_, r, c) in raw_results {
         unique_results.insert((r, c));
     }
     unique_results.len()
@@ -57,7 +57,49 @@ fn part1((grid, (guard_r, guard_c), dir): &(Vec<Vec<char>>, (isize, isize), u8))
 
 #[aoc(day6, part2)]
 fn part2((grid, (guard_r, guard_c), dir): &(Vec<Vec<char>>, (isize, isize), u8)) -> usize {
-    todo!()
+    let mut count = 0;
+
+    let (raw_visited, _) = traverse_grid(grid, (*guard_r, *guard_c), *dir);
+
+    let mut visited = FxHashSet::default();
+    visited.reserve(raw_visited.len());
+    for (_, r, c) in raw_visited {
+        visited.insert((r, c));
+    }
+
+    let mut grid_copy = grid.clone();
+    for (new_o_r, new_o_c) in visited {
+        if new_o_r == *guard_r && new_o_c == *guard_c {
+            continue;
+        }
+        grid_copy[new_o_r as usize][new_o_c as usize] = '#';
+        let (_, result) = traverse_grid(&grid_copy, (*guard_r, *guard_c), *dir);
+        grid_copy[new_o_r as usize][new_o_c as usize] = '.';
+        if result == TraverseResult::Loop {
+            count += 1;
+        }
+    }
+
+    count
+}
+
+#[allow(dead_code)]
+fn print_grid(grid: &Vec<Vec<char>>) {
+    for row in grid.iter() {
+        println!("{}", row.iter().collect::<String>());
+    }
+    println!();
+}
+#[allow(dead_code)]
+fn fill_grid_with_visited(
+    grid: &Vec<Vec<char>>,
+    visited: &FxHashSet<(u8, isize, isize)>,
+) -> Vec<Vec<char>> {
+    let mut new_grid = grid.clone();
+    for (_, r, c) in visited {
+        new_grid[*r as usize][*c as usize] = 'X';
+    }
+    new_grid
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -99,8 +141,8 @@ fn traverse_grid(
                 if visited.contains(&(dir, guard_r, guard_c)) {
                     panic!("How did we get here?");
                 }
-                visited.insert((dir, guard_r, guard_c));
             }
+            visited.insert((dir, guard_r, guard_c));
         }
     }
 }
@@ -113,7 +155,8 @@ mod tests {
     fn part1_example() {
         assert_eq!(
             part1(&parse(
-                "....#.....
+                "\
+....#.....
 .........#
 ..........
 ..#.......
@@ -127,12 +170,12 @@ mod tests {
             41
         );
     }
-
     #[test]
     fn part2_example() {
         assert_eq!(
             part2(&parse(
-                "....#.....
+                "\
+....#.....
 .........#
 ..........
 ..#.......
