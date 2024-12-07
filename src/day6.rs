@@ -83,25 +83,6 @@ fn part2((grid, (guard_r, guard_c), dir): &(Vec<Vec<char>>, (isize, isize), u8))
     count
 }
 
-#[allow(dead_code)]
-fn print_grid(grid: &Vec<Vec<char>>) {
-    for row in grid.iter() {
-        println!("{}", row.iter().collect::<String>());
-    }
-    println!();
-}
-#[allow(dead_code)]
-fn fill_grid_with_visited(
-    grid: &Vec<Vec<char>>,
-    visited: &FxHashSet<(u8, isize, isize)>,
-) -> Vec<Vec<char>> {
-    let mut new_grid = grid.clone();
-    for (_, r, c) in visited {
-        new_grid[*r as usize][*c as usize] = 'X';
-    }
-    new_grid
-}
-
 #[derive(Debug, PartialEq, Copy, Clone)]
 enum TraverseResult {
     Edge,
