@@ -1,7 +1,9 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
+type Num = i64;
+
 #[aoc_generator(day7)]
-fn parse(input: &str) -> Vec<(isize, Vec<isize>)> {
+fn parse(input: &str) -> Vec<(Num, Vec<Num>)> {
     let grid = input
         .lines()
         .map(|line| {
@@ -13,17 +15,16 @@ fn parse(input: &str) -> Vec<(isize, Vec<isize>)> {
                 .unwrap()
                 .split_whitespace()
                 .map(|x| x.parse().unwrap())
-                .collect::<Vec<isize>>();
+                .collect::<Vec<Num>>();
             vals.extend(opers);
             (test, vals)
-            // let v =
         })
         .collect();
     grid
 }
 
 #[aoc(day7, part1)]
-fn part1(input: &[(isize, Vec<isize>)]) -> isize {
+fn part1(input: &[(Num, Vec<Num>)]) -> Num {
     input
         .iter()
         .map(|(test, opers)| {
@@ -36,7 +37,7 @@ fn part1(input: &[(isize, Vec<isize>)]) -> isize {
         .sum()
 }
 
-fn can_make_test_value(test_value: isize, input: isize, opers: &[isize]) -> bool {
+fn can_make_test_value(test_value: Num, input: Num, opers: &[Num]) -> bool {
     if opers.is_empty() {
         panic!("How did you get here?")
     } else if opers.len() == 1 {
@@ -48,7 +49,7 @@ fn can_make_test_value(test_value: isize, input: isize, opers: &[isize]) -> bool
 }
 
 #[aoc(day7, part2)]
-fn part2(input: &[(isize, Vec<isize>)]) -> isize {
+fn part2(input: &[(Num, Vec<Num>)]) -> Num {
     input
         .iter()
         .map(|(test, opers)| {
@@ -61,7 +62,7 @@ fn part2(input: &[(isize, Vec<isize>)]) -> isize {
         .sum()
 }
 
-fn can_make_test_value_with_cat(test_value: isize, input: isize, opers: &[isize]) -> bool {
+fn can_make_test_value_with_cat(test_value: Num, input: Num, opers: &[Num]) -> bool {
     if input > test_value {
         return false;
     }
@@ -71,14 +72,14 @@ fn can_make_test_value_with_cat(test_value: isize, input: isize, opers: &[isize]
         let add_oper = opers[0] + input;
         let mul_oper = opers[0] * input;
         let cat_oper = (input.to_string() + &opers[0].to_string())
-            .parse::<isize>()
+            .parse::<Num>()
             .unwrap();
         return add_oper == test_value || mul_oper == test_value || cat_oper == test_value;
     } else {
         let add_oper = opers[0] + input;
         let mul_oper = opers[0] * input;
         let cat_oper = (input.to_string() + &opers[0].to_string())
-            .parse::<isize>()
+            .parse::<Num>()
             .unwrap();
         return can_make_test_value_with_cat(test_value, add_oper, &opers[1..])
             || can_make_test_value_with_cat(test_value, mul_oper, &opers[1..])

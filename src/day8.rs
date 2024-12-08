@@ -4,6 +4,8 @@ use aoc_runner_derive::{aoc, aoc_generator};
 
 use crate::parsers::v_grid_no_whitespace;
 
+type Num = u16;
+
 #[derive(Debug, Copy, Clone)]
 struct Antenna {
     row: isize,
@@ -30,7 +32,7 @@ fn parse(input: &str) -> (Vec<Antenna>, usize, usize) {
 }
 
 #[aoc(day8, part1)]
-fn part1((input, width, height): &(Vec<Antenna>, usize, usize)) -> u32 {
+fn part1((input, width, height): &(Vec<Antenna>, usize, usize)) -> Num {
     let mut global_pts = HashSet::with_capacity(input.len() * input.len());
 
     for ant_a_i in 0..(input.len() - 1) {
@@ -54,11 +56,11 @@ fn part1((input, width, height): &(Vec<Antenna>, usize, usize)) -> u32 {
             }
         }
     }
-    global_pts.len() as u32
+    global_pts.len() as Num
 }
 
 #[aoc(day8, part2)]
-fn part2((input, width, height): &(Vec<Antenna>, usize, usize)) -> u32 {
+fn part2((input, width, height): &(Vec<Antenna>, usize, usize)) -> Num {
     let mut global_pts = HashSet::with_capacity(input.len() * input.len());
 
     for ant_a_i in 0..(input.len() - 1) {
@@ -93,7 +95,7 @@ fn part2((input, width, height): &(Vec<Antenna>, usize, usize)) -> u32 {
     let mut t = global_pts.iter().collect::<Vec<_>>();
     t.sort();
 
-    global_pts.len() as u32
+    global_pts.len() as Num
 }
 
 #[cfg(test)]

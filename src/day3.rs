@@ -1,24 +1,27 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 use regex::Regex;
+
+type Num = i32;
+
 #[aoc_generator(day3)]
 fn parse(input: &str) -> String {
     input.replace("\n", "")
 }
 
 #[aoc(day3, part1)]
-fn part1(input: &str) -> i64 {
+fn part1(input: &str) -> Num {
     let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap();
     re.captures_iter(input)
         .map(|cap| {
-            let a = cap.get(1).unwrap().as_str().parse::<i64>().unwrap();
-            let b = cap.get(2).unwrap().as_str().parse::<i64>().unwrap();
+            let a = cap.get(1).unwrap().as_str().parse::<Num>().unwrap();
+            let b = cap.get(2).unwrap().as_str().parse::<Num>().unwrap();
             a * b
         })
         .sum()
 }
 
 #[aoc(day3, part2)]
-fn part2(input: &str) -> i64 {
+fn part2(input: &str) -> Num {
     let mut mode_enabled = true;
     let re_mul = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)").unwrap();
 
@@ -34,8 +37,8 @@ fn part2(input: &str) -> i64 {
                 0
             }
             _ => {
-                let a = cap.get(1).unwrap().as_str().parse::<i64>().unwrap();
-                let b = cap.get(2).unwrap().as_str().parse::<i64>().unwrap();
+                let a = cap.get(1).unwrap().as_str().parse::<Num>().unwrap();
+                let b = cap.get(2).unwrap().as_str().parse::<Num>().unwrap();
                 if mode_enabled {
                     a * b
                 } else {

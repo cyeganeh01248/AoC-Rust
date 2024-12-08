@@ -1,8 +1,11 @@
 use std::{cmp::Ordering, collections::HashMap};
 
 use aoc_runner_derive::{aoc, aoc_generator};
+
+type Num = u16;
+
 #[aoc_generator(day5)]
-fn parse(input: &str) -> (HashMap<i64, Vec<i64>>, Vec<Vec<i64>>) {
+fn parse(input: &str) -> (HashMap<Num, Vec<Num>>, Vec<Vec<Num>>) {
     let mut keys = HashMap::new();
     let lines = input.lines().collect::<Vec<_>>();
     let mut i = 0;
@@ -16,9 +19,9 @@ fn parse(input: &str) -> (HashMap<i64, Vec<i64>>, Vec<Vec<i64>>) {
         let b = parts.next().unwrap().parse().unwrap();
 
         keys.entry(a)
-            .and_modify(|li: &mut Vec<i64>| {
+            .and_modify(|li: &mut Vec<Num>| {
                 li.push(b);
-                li.sort_unstable()
+                li.sort()
             })
             .or_insert(vec![b]);
         i += 1;
@@ -32,7 +35,7 @@ fn parse(input: &str) -> (HashMap<i64, Vec<i64>>, Vec<Vec<i64>>) {
             break;
         }
         let line = lines[i];
-        let page: Vec<i64> = line.split(",").map(|s| s.parse().unwrap()).collect();
+        let page: Vec<Num> = line.split(",").map(|s| s.parse().unwrap()).collect();
         pages.push(page);
         i += 1;
     }
@@ -40,7 +43,7 @@ fn parse(input: &str) -> (HashMap<i64, Vec<i64>>, Vec<Vec<i64>>) {
 }
 
 #[aoc(day5, part1)]
-fn part1((keys, pages): &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
+fn part1((keys, pages): &(HashMap<Num, Vec<Num>>, Vec<Vec<Num>>)) -> Num {
     pages
         .iter()
         .map(|page| {
@@ -61,7 +64,7 @@ fn part1((keys, pages): &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
 }
 
 #[aoc(day5, part2)]
-fn part2((keys, pages): &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
+fn part2((keys, pages): &(HashMap<Num, Vec<Num>>, Vec<Vec<Num>>)) -> Num {
     pages
         .iter()
         .map(|page| {
@@ -84,7 +87,7 @@ fn part2((keys, pages): &(HashMap<i64, Vec<i64>>, Vec<Vec<i64>>)) -> i64 {
         .sum()
 }
 
-fn sort_fn(a: &i64, b: &i64, keys: &HashMap<i64, Vec<i64>>) -> Ordering {
+fn sort_fn(a: &Num, b: &Num, keys: &HashMap<Num, Vec<Num>>) -> Ordering {
     if let Some(a_list) = keys.get(a) {
         if a_list.contains(b) {
             return Ordering::Less;

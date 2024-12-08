@@ -2,12 +2,14 @@ use aoc_runner_derive::{aoc, aoc_generator};
 
 use crate::parsers::v_grid_by_whitespace;
 
+type Num = i16;
+
 #[aoc_generator(day2)]
-fn parse(input: &str) -> Vec<Vec<i64>> {
+fn parse(input: &str) -> Vec<Vec<Num>> {
     v_grid_by_whitespace(input)
 }
 
-fn is_safe(report: &[i64]) -> bool {
+fn is_safe(report: &[Num]) -> bool {
     let mut all_ascending = true;
     let mut all_descending = true;
     let mut all_within_1_3 = true;
@@ -27,7 +29,7 @@ fn is_safe(report: &[i64]) -> bool {
 }
 
 #[aoc(day2, part1)]
-fn part1(input: &[Vec<i64>]) -> i64 {
+fn part1(input: &[Vec<Num>]) -> Num {
     input
         .iter()
         .map(|report| if is_safe(report) { 1 } else { 0 })
@@ -35,7 +37,7 @@ fn part1(input: &[Vec<i64>]) -> i64 {
 }
 
 #[aoc(day2, part2)]
-fn part2(input: &[Vec<i64>]) -> i64 {
+fn part2(input: &[Vec<Num>]) -> Num {
     input
         .iter()
         .map(|report| {

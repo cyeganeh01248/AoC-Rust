@@ -2,8 +2,11 @@ use std::collections::HashMap;
 
 use aoc_runner_derive::{aoc, aoc_generator};
 use regex::Regex;
+
+type Num = i32;
+
 #[aoc_generator(day1)]
-fn parse(input: &str) -> (Vec<i64>, Vec<i64>) {
+fn parse(input: &str) -> (Vec<Num>, Vec<Num>) {
     let re = Regex::new(r"(\d+)\s+(\d+)").unwrap();
 
     let mut g1s = vec![];
@@ -11,8 +14,8 @@ fn parse(input: &str) -> (Vec<i64>, Vec<i64>) {
 
     input.lines().for_each(|line| {
         let caps = re.captures(line).unwrap();
-        let g1 = caps.get(1).unwrap().as_str().parse::<i64>().unwrap();
-        let g2 = caps.get(2).unwrap().as_str().parse::<i64>().unwrap();
+        let g1 = caps.get(1).unwrap().as_str().parse::<Num>().unwrap();
+        let g2 = caps.get(2).unwrap().as_str().parse::<Num>().unwrap();
         g1s.push(g1);
         g2s.push(g2);
     });
@@ -20,7 +23,7 @@ fn parse(input: &str) -> (Vec<i64>, Vec<i64>) {
 }
 
 #[aoc(day1, part1)]
-fn part1(input: &(Vec<i64>, Vec<i64>)) -> i64 {
+fn part1(input: &(Vec<Num>, Vec<Num>)) -> Num {
     let mut g1s = input.0.clone();
     let mut g2s = input.1.clone();
     g1s.sort_unstable();
@@ -33,7 +36,7 @@ fn part1(input: &(Vec<i64>, Vec<i64>)) -> i64 {
 }
 
 #[aoc(day1, part2)]
-fn part2(input: &(Vec<i64>, Vec<i64>)) -> i64 {
+fn part2(input: &(Vec<Num>, Vec<Num>)) -> Num {
     let mut scores = HashMap::new();
     for n2 in input.1.iter() {
         scores.entry(n2).and_modify(|n| *n += 1).or_insert(1);
