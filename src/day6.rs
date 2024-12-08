@@ -90,7 +90,7 @@ enum TraverseResult {
 }
 
 fn traverse_grid(
-    grid: &Vec<Vec<char>>,
+    grid: &[Vec<char>],
     (mut guard_r, mut guard_c): (isize, isize),
     mut dir: u8,
 ) -> (FxHashSet<(u8, isize, isize)>, TraverseResult) {

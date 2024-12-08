@@ -1,5 +1,4 @@
 use aoc_runner_derive::{aoc, aoc_generator};
-use num_bigint::BigInt as Integer;
 
 #[aoc_generator(day7)]
 fn parse(input: &str) -> Vec<(isize, Vec<isize>)> {
@@ -24,21 +23,21 @@ fn parse(input: &str) -> Vec<(isize, Vec<isize>)> {
 }
 
 #[aoc(day7, part1)]
-fn part1(input: &Vec<(isize, Vec<isize>)>) -> isize {
+fn part1(input: &[(isize, Vec<isize>)]) -> isize {
     input
         .iter()
         .map(|(test, opers)| {
             if can_make_test_value(*test, 0, opers) {
-                return *test;
+                *test
             } else {
-                return 0;
+                0
             }
         })
         .sum()
 }
 
 fn can_make_test_value(test_value: isize, input: isize, opers: &[isize]) -> bool {
-    if opers.len() == 0 {
+    if opers.is_empty() {
         panic!("How did you get here?")
     } else if opers.len() == 1 {
         return opers[0] + input == test_value || opers[0] * input == test_value;
@@ -49,47 +48,41 @@ fn can_make_test_value(test_value: isize, input: isize, opers: &[isize]) -> bool
 }
 
 #[aoc(day7, part2)]
-fn part2(input: &Vec<(isize, Vec<isize>)>) -> Integer {
+fn part2(input: &[(isize, Vec<isize>)]) -> isize {
     input
         .iter()
         .map(|(test, opers)| {
-            if can_make_test_value_with_cat(
-                Integer::from(*test),
-                Integer::from(0),
-                &opers
-                    .iter()
-                    .map(|x| Integer::from(*x))
-                    .collect::<Vec<Integer>>(),
-            ) {
-                return Integer::from(*test);
+            if can_make_test_value_with_cat(*test, 0, opers) {
+                *test
             } else {
-                return Integer::from(0);
+                0
             }
         })
         .sum()
 }
 
-fn can_make_test_value_with_cat(test_value: Integer, input: Integer, opers: &[Integer]) -> bool {
-    if opers.len() == 0 {
+fn can_make_test_value_with_cat(test_value: isize, input: isize, opers: &[isize]) -> bool {
+    if input > test_value {
+        return false;
+    }
+    if opers.is_empty() {
         panic!("How did you get here?")
     } else if opers.len() == 1 {
-        let add_oper = opers[0].clone() + input.clone();
-        let mul_oper = opers[0].clone() * input.clone();
-        let cat_oper = (input.clone().to_string() + &opers[0].clone().to_string())
-            .parse::<Integer>()
-            .unwrap();
-        return add_oper == test_value.clone()
-            || mul_oper == test_value.clone()
-            || cat_oper == test_value.clone();
-    } else {
-        let add_oper = opers[0].clone() + input.clone();
-        let mul_oper = opers[0].clone() * input.clone();
+        let add_oper = opers[0] + input;
+        let mul_oper = opers[0] * input;
         let cat_oper = (input.to_string() + &opers[0].to_string())
-            .parse::<Integer>()
+            .parse::<isize>()
             .unwrap();
-        return can_make_test_value_with_cat(test_value.clone(), add_oper, &opers[1..])
-            || can_make_test_value_with_cat(test_value.clone(), mul_oper, &opers[1..])
-            || can_make_test_value_with_cat(test_value.clone(), cat_oper, &opers[1..]);
+        return add_oper == test_value || mul_oper == test_value || cat_oper == test_value;
+    } else {
+        let add_oper = opers[0] + input;
+        let mul_oper = opers[0] * input;
+        let cat_oper = (input.to_string() + &opers[0].to_string())
+            .parse::<isize>()
+            .unwrap();
+        return can_make_test_value_with_cat(test_value, add_oper, &opers[1..])
+            || can_make_test_value_with_cat(test_value, mul_oper, &opers[1..])
+            || can_make_test_value_with_cat(test_value, cat_oper, &opers[1..]);
     }
 }
 
@@ -133,7 +126,7 @@ mod tests {
 292: 11 6 16 20\
             "
             )),
-            Integer::from(11387)
+            11387
         );
     }
 }
