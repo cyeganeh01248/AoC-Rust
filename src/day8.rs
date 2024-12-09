@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use aoc_runner_derive::{aoc, aoc_generator};
 
@@ -6,25 +6,19 @@ use crate::parsers::v_grid_no_whitespace;
 
 type Num = u16;
 
-#[derive(Debug, Copy, Clone)]
-struct Antenna {
-    row: isize,
-    col: isize,
-    code: char,
-}
-
 #[aoc_generator(day8)]
-fn parse(input: &str) -> (Vec<Antenna>, usize, usize) {
+fn parse(input: &str) -> (HashMap<char, Vec<(isize, isize)>>, usize, usize) {
     let grid: Vec<Vec<char>> = v_grid_no_whitespace(input);
-    let mut antennas = Vec::new();
+    let mut antennas = HashMap::new();
     for (row, row_chars) in grid.iter().enumerate() {
         for (col, code) in row_chars.iter().enumerate() {
             if *code != '.' {
-                antennas.push(Antenna {
-                    row: row as isize,
-                    col: col as isize,
-                    code: *code,
-                });
+                antennas
+                    .entry(*code)
+                    .and_modify(|li: &mut Vec<(isize, isize)>| {
+                        li.push((row as isize, col as isize));
+                    })
+                    .or_insert(vec![(row as isize, col as isize)]);
             }
         }
     }
@@ -32,27 +26,27 @@ fn parse(input: &str) -> (Vec<Antenna>, usize, usize) {
 }
 
 #[aoc(day8, part1)]
-fn part1((input, width, height): &(Vec<Antenna>, usize, usize)) -> Num {
+fn part1((input, width, height): &(HashMap<char, Vec<(isize, isize)>>, usize, usize)) -> Num {
     let mut global_pts = HashSet::with_capacity(input.len() * input.len());
 
-    for ant_a_i in 0..(input.len() - 1) {
-        for ant_b_i in (ant_a_i + 1)..input.len() {
-            let ant_a = input[ant_a_i];
-            let ant_b = input[ant_b_i];
-            if ant_a.code != ant_b.code {
-                continue;
-            }
-            let slope = ((ant_b.row - ant_a.row), (ant_b.col - ant_a.col));
+    for code in input.keys() {
+        let ants = input.get(code).unwrap();
+        for ant_a_i in 0..(ants.len() - 1) {
+            for ant_b_i in (ant_a_i + 1)..ants.len() {
+                let ant_a = ants[ant_a_i];
+                let ant_b = ants[ant_b_i];
+                let slope = ((ant_b.0 - ant_a.0), (ant_b.1 - ant_a.1));
 
-            let mut pts = HashSet::new();
-            pts.insert((ant_a.row - slope.0, ant_a.col - slope.1));
-            pts.insert((ant_b.row + slope.0, ant_b.col + slope.1));
-            for (pt_r, pt_c) in pts {
-                if pt_r < 0 || pt_r >= *height as isize || pt_c < 0 || pt_c >= *width as isize {
-                    continue;
+                let mut pts = HashSet::new();
+                pts.insert((ant_a.0 - slope.0, ant_a.1 - slope.1));
+                pts.insert((ant_b.0 + slope.0, ant_b.1 + slope.1));
+                for (pt_r, pt_c) in pts {
+                    if pt_r < 0 || pt_r >= *height as isize || pt_c < 0 || pt_c >= *width as isize {
+                        continue;
+                    }
+                    // println!("({}, {})", pt_r, pt_c);
+                    global_pts.insert((pt_r as usize, pt_c as usize));
                 }
-                // println!("({}, {})", pt_r, pt_c);
-                global_pts.insert((pt_r as usize, pt_c as usize));
             }
         }
     }
@@ -60,35 +54,34 @@ fn part1((input, width, height): &(Vec<Antenna>, usize, usize)) -> Num {
 }
 
 #[aoc(day8, part2)]
-fn part2((input, width, height): &(Vec<Antenna>, usize, usize)) -> Num {
+fn part2((input, width, height): &(HashMap<char, Vec<(isize, isize)>>, usize, usize)) -> Num {
     let mut global_pts = HashSet::with_capacity(input.len() * input.len());
+    for code in input.keys() {
+        let ants = input.get(code).unwrap();
+        for ant_a_i in 0..(ants.len() - 1) {
+            for ant_b_i in (ant_a_i + 1)..ants.len() {
+                let ant_a = ants[ant_a_i];
+                let ant_b = ants[ant_b_i];
+                let slope = ((ant_b.0 - ant_a.0), (ant_b.1 - ant_a.1));
 
-    for ant_a_i in 0..(input.len() - 1) {
-        for ant_b_i in (ant_a_i + 1)..input.len() {
-            let ant_a = input[ant_a_i];
-            let ant_b = input[ant_b_i];
-            if ant_a.code != ant_b.code {
-                continue;
-            }
-            let slope = ((ant_b.row - ant_a.row), (ant_b.col - ant_a.col));
-
-            let (mut pt_r, mut pt_c) = (ant_a.row, ant_a.col);
-            loop {
-                if pt_r < 0 || pt_r >= *height as isize || pt_c < 0 || pt_c >= *width as isize {
-                    break;
+                let (mut pt_r, mut pt_c) = (ant_a.0, ant_a.1);
+                loop {
+                    if pt_r < 0 || pt_r >= *height as isize || pt_c < 0 || pt_c >= *width as isize {
+                        break;
+                    }
+                    global_pts.insert((pt_r, pt_c));
+                    pt_r -= slope.0;
+                    pt_c -= slope.1;
                 }
-                global_pts.insert((pt_r, pt_c));
-                pt_r -= slope.0;
-                pt_c -= slope.1;
-            }
-            let (mut pt_r, mut pt_c) = (ant_b.row, ant_b.col);
-            loop {
-                if pt_r < 0 || pt_r >= *height as isize || pt_c < 0 || pt_c >= *width as isize {
-                    break;
+                let (mut pt_r, mut pt_c) = (ant_b.0, ant_b.1);
+                loop {
+                    if pt_r < 0 || pt_r >= *height as isize || pt_c < 0 || pt_c >= *width as isize {
+                        break;
+                    }
+                    global_pts.insert((pt_r, pt_c));
+                    pt_r += slope.0;
+                    pt_c += slope.1;
                 }
-                global_pts.insert((pt_r, pt_c));
-                pt_r += slope.0;
-                pt_c += slope.1;
             }
         }
     }
