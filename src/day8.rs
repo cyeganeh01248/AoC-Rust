@@ -1,3 +1,4 @@
+#![allow(clippy::type_complexity)]
 use std::collections::{HashMap, HashSet};
 
 use aoc_runner_derive::{aoc, aoc_generator};
