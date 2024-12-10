@@ -77,13 +77,16 @@ run-file:
 
 bench-file:
     #!/usr/bin/env bash
-    echo "AOC 2024" | tee results/bench-results.txt
+    echo "************************" | tee -a results/bench-results.txt
+    echo "AOC 2024 Bench Test - " $(date) | tee -a results/bench-results.txt
     for day in $(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h); do
         echo ------------------------ | tee -a results/bench-results.txt
         cargo aoc input -d $day 2> /dev/null
-        cargo aoc bench -d $day 2> /dev/null | grep Day | tee -a results/bench-results.txt
+        for p in {1..2}; do
+            echo $(date) - $(cargo aoc bench -d $day -p $p 2> /dev/null | grep Day) | tee -a results/bench-results.txt
+        done
     done
-    echo ------------------------ | tee -a results/bench-results.txt
+    echo "------------------------" | tee -a results/bench-results.txt
 
 clean:
     cargo clean

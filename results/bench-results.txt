@@ -1,32 +1,33 @@
-AOC 2024
+************************
+AOC 2024 Bench Test -  Tue Dec 10 15:36:27 EST 2024
 ------------------------
-Day1 - Part1/(default)  time:   [8.0185 µs 8.0645 µs 8.1192 µs]
-Day1 - Part2/(default)  time:   [29.484 µs 29.549 µs 29.615 µs]
+Tue Dec 10 15:36:27 EST 2024 - Day1 - Part1/(default) time: [8.0458 µs 8.0675 µs 8.0952 µs]
+Tue Dec 10 15:36:38 EST 2024 - Day1 - Part2/(default) time: [30.606 µs 30.708 µs 30.815 µs]
 ------------------------
-Day2 - Part1/(default)  time:   [6.0745 µs 6.1063 µs 6.1466 µs]
-Day2 - Part2/(default)  time:   [87.821 µs 88.325 µs 88.910 µs]
+Tue Dec 10 15:36:48 EST 2024 - Day2 - Part1/(default) time: [5.8327 µs 5.8603 µs 5.8942 µs]
+Tue Dec 10 15:36:58 EST 2024 - Day2 - Part2/(default) time: [84.468 µs 84.793 µs 85.135 µs]
 ------------------------
-Day3 - Part1/(default)  time:   [195.95 µs 196.62 µs 197.36 µs]
-Day3 - Part2/(default)  time:   [251.35 µs 253.22 µs 255.10 µs]
+Tue Dec 10 15:37:10 EST 2024 - Day3 - Part1/(default) time: [197.08 µs 197.45 µs 197.83 µs]
+Tue Dec 10 15:37:20 EST 2024 - Day3 - Part2/(default) time: [255.16 µs 255.62 µs 256.19 µs]
 ------------------------
-Day4 - Part1/(default)  time:   [1.4052 ms 1.4098 ms 1.4150 ms]
-Day4 - Part2/(default)  time:   [141.09 µs 141.51 µs 142.06 µs]
+Tue Dec 10 15:37:31 EST 2024 - Day4 - Part1/(default) time: [1.3849 ms 1.3879 ms 1.3916 ms]
+Tue Dec 10 15:37:46 EST 2024 - Day4 - Part2/(default) time: [143.11 µs 143.53 µs 144.02 µs]
 ------------------------
-Day5 - Part1/(default)  time:   [24.507 µs 24.783 µs 25.038 µs]
-Day5 - Part2/(default)  time:   [195.95 µs 196.47 µs 197.13 µs]
+Tue Dec 10 15:37:57 EST 2024 - Day5 - Part1/(default) time: [23.948 µs 24.020 µs 24.111 µs]
+Tue Dec 10 15:38:07 EST 2024 - Day5 - Part2/(default) time: [205.92 µs 208.53 µs 210.92 µs]
 ------------------------
-Day6 - Part1/(default)  time:   [260.74 µs 261.34 µs 262.06 µs]
-Day6 - Part2/(default)  time:   [114.99 ms 115.27 ms 115.57 ms]
+Tue Dec 10 15:38:18 EST 2024 - Day6 - Part1/(default) time: [258.39 µs 259.24 µs 260.18 µs]
+Tue Dec 10 15:38:29 EST 2024 - Day6 - Part2/(default) time: [114.79 ms 115.15 ms 115.62 ms]
 ------------------------
-Day7 - Part1/(default)  time:   [292.75 µs 293.39 µs 294.13 µs]
-Day7 - Part2/(default)  time:   [166.19 ms 166.57 ms 166.97 ms]
+Tue Dec 10 15:38:45 EST 2024 - Day7 - Part1/(default) time: [290.86 µs 291.53 µs 292.39 µs]
+Tue Dec 10 15:38:58 EST 2024 - Day7 - Part2/(default) time: [163.74 ms 164.10 ms 164.49 ms]
 ------------------------
-Day8 - Part1/(default)  time:   [20.731 µs 20.786 µs 20.848 µs]
-Day8 - Part2/(default)  time:   [41.252 µs 41.342 µs 41.445 µs]
+Tue Dec 10 15:39:21 EST 2024 - Day8 - Part1/(default) time: [20.615 µs 20.681 µs 20.757 µs]
+Tue Dec 10 15:39:33 EST 2024 - Day8 - Part2/(default) time: [40.493 µs 40.598 µs 40.745 µs]
 ------------------------
-Day9 - Part1/(default)  time:   [111.14 µs 111.40 µs 111.73 µs]
-Day9 - Part2/(default)  time:   [12.945 ms 12.980 ms 13.018 ms]
+Tue Dec 10 15:39:45 EST 2024 - Day9 - Part1/(default) time: [110.33 µs 110.59 µs 110.92 µs]
+Tue Dec 10 15:39:55 EST 2024 - Day9 - Part2/(default) time: [12.891 ms 12.919 ms 12.951 ms]
 ------------------------
-Day10 - Part1/(default) time:   [45.300 µs 45.443 µs 45.609 µs]
-Day10 - Part2/(default) time:   [41.024 µs 41.538 µs 42.462 µs]
+Tue Dec 10 15:40:05 EST 2024 - Day10 - Part1/(default) time: [44.738 µs 44.836 µs 44.997 µs]
+Tue Dec 10 15:40:18 EST 2024 - Day10 - Part2/(default) time: [40.840 µs 40.961 µs 41.090 µs]
 ------------------------
