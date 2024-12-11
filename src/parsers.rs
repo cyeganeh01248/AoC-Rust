@@ -1,7 +1,9 @@
 #![allow(dead_code)]
 use std::{any::type_name, str::FromStr};
 
-pub fn v_grid_by_whitespace<T>(input: &str) -> Vec<Vec<T>>
+use crate::common::Matrix;
+
+pub fn v_grid_by_whitespace<T>(input: &str) -> Matrix<T>
 where
     T: FromStr,
 {
@@ -18,7 +20,7 @@ where
         .collect()
 }
 
-pub fn v_grid_no_whitespace<T>(input: &str) -> Vec<Vec<T>>
+pub fn v_grid_no_whitespace<T>(input: &str) -> Matrix<T>
 where
     T: FromStr,
 {

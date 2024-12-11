@@ -2,10 +2,12 @@ use std::{cmp::Ordering, collections::HashMap};
 
 use aoc_runner_derive::{aoc, aoc_generator};
 
+use crate::common::Matrix;
+
 type Num = u16;
 
 #[aoc_generator(day5)]
-fn parse(input: &str) -> (HashMap<Num, Vec<Num>>, Vec<Vec<Num>>) {
+fn parse(input: &str) -> (HashMap<Num, Vec<Num>>, Matrix<Num>) {
     let mut keys = HashMap::new();
     let lines = input.lines().collect::<Vec<_>>();
     let mut i = 0;
@@ -43,7 +45,7 @@ fn parse(input: &str) -> (HashMap<Num, Vec<Num>>, Vec<Vec<Num>>) {
 }
 
 #[aoc(day5, part1)]
-fn part1((keys, pages): &(HashMap<Num, Vec<Num>>, Vec<Vec<Num>>)) -> Num {
+fn part1((keys, pages): &(HashMap<Num, Vec<Num>>, Matrix<Num>)) -> Num {
     pages
         .iter()
         .map(|page| {
@@ -64,7 +66,7 @@ fn part1((keys, pages): &(HashMap<Num, Vec<Num>>, Vec<Vec<Num>>)) -> Num {
 }
 
 #[aoc(day5, part2)]
-fn part2((keys, pages): &(HashMap<Num, Vec<Num>>, Vec<Vec<Num>>)) -> Num {
+fn part2((keys, pages): &(HashMap<Num, Vec<Num>>, Matrix<Num>)) -> Num {
     pages
         .iter()
         .map(|page| {

@@ -1,16 +1,16 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::parsers::v_grid_no_whitespace;
+use crate::{common::Matrix, parsers::v_grid_no_whitespace};
 
 type Num = u16;
 
 #[aoc_generator(day4)]
-fn parse(input: &str) -> Vec<Vec<char>> {
+fn parse(input: &str) -> Matrix<char> {
     v_grid_no_whitespace(input)
 }
 
 #[aoc(day4, part1)]
-fn part1(input: &[Vec<char>]) -> Num {
+fn part1(input: &Matrix<char>) -> Num {
     let mut count = 0;
     for row in 0..(input.len() as isize) {
         for col in 0..(input[row as usize].len() as isize) {
@@ -42,7 +42,7 @@ fn part1(input: &[Vec<char>]) -> Num {
 }
 
 #[aoc(day4, part2)]
-fn part2(input: &[Vec<char>]) -> Num {
+fn part2(input: &Matrix<char>) -> Num {
     let mut count = 0;
     for row in 1..(input.len() as isize - 1) {
         for col in 1..(input[row as usize].len() as isize - 1) {

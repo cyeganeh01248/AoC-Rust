@@ -3,12 +3,12 @@ use std::collections::HashSet;
 use aoc_runner_derive::{aoc, aoc_generator};
 use fxhash::FxHashSet;
 
-use crate::parsers::v_grid_no_whitespace;
+use crate::{common::Matrix, parsers::v_grid_no_whitespace};
 
 type Num = u16;
 
 #[aoc_generator(day6)]
-fn parse(input: &str) -> (Vec<Vec<char>>, (isize, isize), u8) {
+fn parse(input: &str) -> (Matrix<char>, (isize, isize), u8) {
     let mut guard_r = 0isize;
     let mut guard_c = 0isize;
     let mut dir = 0u8;
@@ -46,7 +46,7 @@ fn parse(input: &str) -> (Vec<Vec<char>>, (isize, isize), u8) {
 }
 
 #[aoc(day6, part1)]
-fn part1((grid, (guard_r, guard_c), dir): &(Vec<Vec<char>>, (isize, isize), u8)) -> Num {
+fn part1((grid, (guard_r, guard_c), dir): &(Matrix<char>, (isize, isize), u8)) -> Num {
     let grid = grid.clone();
 
     let (raw_results, _) = traverse_grid(&grid, (*guard_r, *guard_c), *dir);
@@ -59,7 +59,7 @@ fn part1((grid, (guard_r, guard_c), dir): &(Vec<Vec<char>>, (isize, isize), u8))
 }
 
 #[aoc(day6, part2)]
-fn part2((grid, (guard_r, guard_c), dir): &(Vec<Vec<char>>, (isize, isize), u8)) -> Num {
+fn part2((grid, (guard_r, guard_c), dir): &(Matrix<char>, (isize, isize), u8)) -> Num {
     let mut count = 0;
 
     let (raw_visited, _) = traverse_grid(grid, (*guard_r, *guard_c), *dir);

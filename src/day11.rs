@@ -43,7 +43,7 @@ fn blink_helper(num: Num, depth: u8, target_depth: u8, cache: &mut HashMap<(Num,
     };
 
     cache.insert((num, depth), result);
-    return result;
+    result
 }
 
 #[aoc(day11, part2)]

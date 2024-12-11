@@ -2,17 +2,17 @@ use std::collections::HashSet;
 
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::parsers::v_grid_no_whitespace;
+use crate::{common::Matrix, parsers::v_grid_no_whitespace};
 
 type Num = u32;
 
 #[aoc_generator(day10)]
-fn parse(input: &str) -> Vec<Vec<u8>> {
+fn parse(input: &str) -> Matrix<u8> {
     v_grid_no_whitespace(input)
 }
 
 #[aoc(day10, part1)]
-fn part1(input: &[Vec<u8>]) -> Num {
+fn part1(input: &Matrix<u8>) -> Num {
     let mut trail_heads = vec![];
 
     for (r, row) in input.iter().enumerate() {
@@ -78,7 +78,7 @@ fn bfs_to_peak_cnt(input: &[Vec<u8>], r: isize, c: isize, d: u8) -> Num {
 }
 
 #[aoc(day10, part2)]
-fn part2(input: &[Vec<u8>]) -> Num {
+fn part2(input: &Matrix<u8>) -> Num {
     let mut trail_heads = vec![];
 
     for (r, row) in input.iter().enumerate() {
