@@ -60,8 +60,6 @@ fn part1((grid, (guard_r, guard_c), dir): &(Matrix<char>, (isize, isize), u8)) -
 
 #[aoc(day6, part2)]
 fn part2((grid, (guard_r, guard_c), dir): &(Matrix<char>, (isize, isize), u8)) -> Num {
-    let mut count = 0;
-
     let (raw_visited, _) = traverse_grid(grid, (*guard_r, *guard_c), *dir);
 
     let mut visited = FxHashSet::default();
@@ -71,19 +69,25 @@ fn part2((grid, (guard_r, guard_c), dir): &(Matrix<char>, (isize, isize), u8)) -
     }
 
     let mut grid_copy = grid.clone();
-    for (new_o_r, new_o_c) in visited {
-        if new_o_r == *guard_r && new_o_c == *guard_c {
-            continue;
-        }
-        grid_copy[new_o_r as usize][new_o_c as usize] = '#';
-        let (_, result) = traverse_grid(&grid_copy, (*guard_r, *guard_c), *dir);
-        grid_copy[new_o_r as usize][new_o_c as usize] = '.';
-        if result == TraverseResult::Loop {
-            count += 1;
-        }
-    }
 
-    count
+    // for (new_o_r, new_o_c) in visited {
+    visited
+        .iter()
+        .map(|(new_o_r, new_o_c)| {
+            let new_o_r = *new_o_r;
+            let new_o_c = *new_o_c;
+            if new_o_r == *guard_r && new_o_c == *guard_c {
+                return 0;
+            }
+            grid_copy[new_o_r as usize][new_o_c as usize] = '#';
+            let (_, result) = traverse_grid(&grid_copy, (*guard_r, *guard_c), *dir);
+            grid_copy[new_o_r as usize][new_o_c as usize] = '.';
+            if result == TraverseResult::Loop {
+                return 1;
+            }
+            0
+        })
+        .sum()
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]

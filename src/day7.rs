@@ -1,4 +1,5 @@
 use aoc_runner_derive::{aoc, aoc_generator};
+use rayon::prelude::*;
 
 type Num = i64;
 
@@ -51,7 +52,7 @@ fn can_make_test_value(test_value: Num, input: Num, opers: &[Num]) -> bool {
 #[aoc(day7, part2)]
 fn part2(input: &[(Num, Vec<Num>)]) -> Num {
     input
-        .iter()
+        .par_iter()
         .map(|(test, opers)| {
             if can_make_test_value_with_cat(*test, 0, opers) {
                 *test
