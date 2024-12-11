@@ -8,3 +8,5 @@ where
 }
 
 pub type Matrix<T> = Vec<Vec<T>>;
+pub use fxhash::FxHashMap as HashMap;
+pub use fxhash::FxHashSet as HashSet;

@@ -1,16 +1,17 @@
 #![allow(clippy::type_complexity)]
-use std::collections::{HashMap, HashSet};
 
 use aoc_runner_derive::{aoc, aoc_generator};
 
 use crate::{common::Matrix, parsers::v_grid_no_whitespace};
+
+use crate::common::{HashMap, HashSet};
 
 type Num = u16;
 
 #[aoc_generator(day8)]
 fn parse(input: &str) -> (HashMap<char, Vec<(isize, isize)>>, usize, usize) {
     let grid: Matrix<char> = v_grid_no_whitespace(input);
-    let mut antennas = HashMap::new();
+    let mut antennas = HashMap::default();
     for (row, row_chars) in grid.iter().enumerate() {
         for (col, code) in row_chars.iter().enumerate() {
             if *code != '.' {
@@ -28,7 +29,8 @@ fn parse(input: &str) -> (HashMap<char, Vec<(isize, isize)>>, usize, usize) {
 
 #[aoc(day8, part1)]
 fn part1((input, width, height): &(HashMap<char, Vec<(isize, isize)>>, usize, usize)) -> Num {
-    let mut global_pts = HashSet::with_capacity(input.len() * input.len());
+    let mut global_pts = HashSet::default();
+    global_pts.reserve(input.len() * input.len());
 
     for code in input.keys() {
         let ants = input.get(code).unwrap();
@@ -38,7 +40,7 @@ fn part1((input, width, height): &(HashMap<char, Vec<(isize, isize)>>, usize, us
                 let ant_b = ants[ant_b_i];
                 let slope = ((ant_b.0 - ant_a.0), (ant_b.1 - ant_a.1));
 
-                let mut pts = HashSet::new();
+                let mut pts = HashSet::default();
                 pts.insert((ant_a.0 - slope.0, ant_a.1 - slope.1));
                 pts.insert((ant_b.0 + slope.0, ant_b.1 + slope.1));
                 for (pt_r, pt_c) in pts {
@@ -56,7 +58,8 @@ fn part1((input, width, height): &(HashMap<char, Vec<(isize, isize)>>, usize, us
 
 #[aoc(day8, part2)]
 fn part2((input, width, height): &(HashMap<char, Vec<(isize, isize)>>, usize, usize)) -> Num {
-    let mut global_pts = HashSet::with_capacity(input.len() * input.len());
+    let mut global_pts = HashSet::default();
+    global_pts.reserve(input.len() * input.len());
     for code in input.keys() {
         let ants = input.get(code).unwrap();
         for ant_a_i in 0..(ants.len() - 1) {

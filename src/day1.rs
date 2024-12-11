@@ -1,5 +1,4 @@
-use std::collections::HashMap;
-
+use crate::common::HashMap;
 use aoc_runner_derive::{aoc, aoc_generator};
 use regex::Regex;
 
@@ -37,7 +36,7 @@ fn part1(input: &(Vec<Num>, Vec<Num>)) -> Num {
 
 #[aoc(day1, part2)]
 fn part2(input: &(Vec<Num>, Vec<Num>)) -> Num {
-    let mut scores = HashMap::new();
+    let mut scores = HashMap::default();
     for n2 in input.1.iter() {
         scores.entry(n2).and_modify(|n| *n += 1).or_insert(1);
     }

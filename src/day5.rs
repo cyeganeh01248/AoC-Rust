@@ -1,6 +1,6 @@
-use std::{cmp::Ordering, collections::HashMap};
-
+use crate::common::HashMap;
 use aoc_runner_derive::{aoc, aoc_generator};
+use std::cmp::Ordering;
 
 use crate::common::Matrix;
 
@@ -8,7 +8,7 @@ type Num = u16;
 
 #[aoc_generator(day5)]
 fn parse(input: &str) -> (HashMap<Num, Vec<Num>>, Matrix<Num>) {
-    let mut keys = HashMap::new();
+    let mut keys = HashMap::default();
     let lines = input.lines().collect::<Vec<_>>();
     let mut i = 0;
     loop {
