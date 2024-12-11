@@ -48,6 +48,7 @@ dependencies = [
  "aoc-runner-derive",
  "fxhash",
  "num-bigint",
+ "num-traits",
  "regex",
  "rust-crypto",
 ]
