@@ -12,5 +12,6 @@ num-bigint = "0.4.6"
 num-traits = { version = "0.2.19", features = ["i128"] }
 pad = "0.1.6"
 rayon = "1.10.0"
+realistic = "0.5.2"
 regex = { version = "1.11.1", features = ["perf-dfa-full"] }
 rust-crypto = "0.2.36"

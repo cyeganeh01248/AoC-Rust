@@ -125,31 +125,24 @@ fn part2(garden: &Matrix<char>) -> Num {
         let cell_code = garden[r as usize][c as usize];
         let area_code = (id, cell_code);
 
-        let points = find_points_in_region(garden, r, c);
+        let mut points = find_points_in_region(garden, r, c);
         areas.insert(area_code, points.len() as Num);
         perimeters.insert(area_code, 0 as Num);
-        for p in points.iter() {
+        for p in points.clone().iter() {
+            points.insert((p.0 + 1, p.1 + 1));
             not_checked.remove(&p);
         }
 
-        let mut on_edge = vec![];
         for p in points.iter() {
-            for (dr, dc) in vec![(-1, 0), (1, 0), (0, -1), (0, 1)] {
-                let nr = p.0 + dr;
-                let nc = p.1 + dc;
-                if nr < 0
-                    || nr >= garden.len() as isize
-                    || nc < 0
-                    || nc >= garden[0].len() as isize
-                    || garden[p.0 as usize][p.1 as usize] != garden[nr as usize][nc as usize]
-                {
-                    on_edge.push((p.0, p.1));
-                    break;
-                }
-            }
-        }
-        println!("{area_code:?} {on_edge:?}");
+            let cells = 0u8;
+            for (dr, dc) in [(0, 0), (0, -1), (-1, -1), (-1, 0)] {
+                let (nr, nc) = (p.0 + dr, p.1 + dc);
 
+                if dr != 0 && nr < 0 {}
+                if dc != 0 && nc < 0 {}
+            }
+            println!("{:?} {p:?} {:04b}", area_code, cells);
+        }
         id += 1;
     }
 
