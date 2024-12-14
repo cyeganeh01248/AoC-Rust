@@ -64,7 +64,6 @@ fetch-inputs:
         fi
     done
 
-
 run-file:
     #!/usr/bin/env bash
     echo "AOC 2024" | tee results/run-results.txt
@@ -74,19 +73,6 @@ run-file:
         cargo aoc -d $day 2> /dev/null | grep -E "Day" | tee -a results/run-results.txt
     done
     echo ------------------------ | tee -a results/run-results.txt
-
-bench-file:
-    #!/usr/bin/env bash
-    echo "************************" | tee -a results/bench-results.txt
-    echo "AOC 2024 Bench Test - " $(date) | tee -a results/bench-results.txt
-    for day in $(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h); do
-        echo ------------------------ | tee -a results/bench-results.txt
-        cargo aoc input -d $day 2> /dev/null
-        for p in {1..2}; do
-            echo $(date) - $(cargo aoc bench -d $day -p $p 2> /dev/null | grep Day) | tee -a results/bench-results.txt
-        done
-    done
-    echo "------------------------" | tee -a results/bench-results.txt
 
 clean:
     cargo clean
