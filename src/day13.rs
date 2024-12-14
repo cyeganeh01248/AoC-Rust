@@ -70,9 +70,10 @@ fn part1(machines: &[Machine]) -> Num {
             sum = sum + a * Num::from(3) + b;
         }
     }
-    return sum;
+    sum
 }
 
+#[allow(non_snake_case)]
 #[aoc(day13, part2)]
 fn part2(machines: &[Machine]) -> Num {
     let mut sum = Num::from(0);
@@ -93,7 +94,7 @@ fn part2(machines: &[Machine]) -> Num {
             sum = sum + a * Num::from(3) + b;
         }
     }
-    return sum;
+    sum
 }
 
 #[cfg(test)]
