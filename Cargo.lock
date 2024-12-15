@@ -12,6 +12,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoc-2024-rust"
+version = "0.1.0"
+dependencies = [
+ "aoc-runner",
+ "aoc-runner-derive",
+ "fxhash",
+ "num-bigint",
+ "num-traits",
+ "pad",
+ "rayon",
+ "realistic",
+ "regex",
+ "rust-crypto",
+]
+
+[[package]]
 name = "aoc-runner"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -38,22 +54,6 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
-]
-
-[[package]]
-name = "aoc-rust"
-version = "0.1.0"
-dependencies = [
- "aoc-runner",
- "aoc-runner-derive",
- "fxhash",
- "num-bigint",
- "num-traits",
- "pad",
- "rayon",
- "realistic",
- "regex",
- "rust-crypto",
 ]
 
 [[package]]
