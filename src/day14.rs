@@ -30,12 +30,16 @@ fn part1(input: &[Robot]) -> u32 {
     count_quadrants(&robots, WIDTH, HEIGHT)
 }
 
-fn simulate(robots: &mut [Robot], steps: u8, width: i16, height: i16) {
+fn simulate(robots: &mut [Robot], steps: i128, width: i16, height: i16) {
     for robot in robots.iter_mut() {
-        for _ in 0..steps {
-            robot.pos.0 = (robot.pos.0 + robot.vel.0 + width) % width;
-            robot.pos.1 = (robot.pos.1 + robot.vel.1 + height) % height;
-        }
+        let rx = robot.pos.0 as i128;
+        let ry = robot.pos.1 as i128;
+        let vx = robot.vel.0 as i128;
+        let vy = robot.vel.1 as i128;
+        let x = (rx + vx * steps).rem_euclid(width as i128);
+        let y = (ry + vy * steps).rem_euclid(height as i128);
+        robot.pos.0 = x as i16;
+        robot.pos.1 = y as i16;
     }
 }
 fn count_quadrants(robots: &[Robot], width: i16, height: i16) -> u32 {
@@ -66,7 +70,7 @@ fn count_quadrants(robots: &[Robot], width: i16, height: i16) -> u32 {
 #[aoc(day14, part2)]
 fn part2(input: &[Robot]) -> u32 {
     let mut robots = input.to_owned();
-    for i in 0..10000 {
+    for i in 0..(WIDTH as u32 * HEIGHT as u32) {
         let mut matrix = vec![vec![' '; WIDTH as usize]; HEIGHT as usize];
         simulate(&mut robots, 1, WIDTH, HEIGHT);
         for robot in robots.iter() {

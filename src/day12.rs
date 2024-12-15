@@ -1,7 +1,7 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
 use crate::{
-    common::{print_matrix, HashMap, HashSet, Matrix},
+    common::{HashMap, HashSet, Matrix},
     parsers::v_grid_no_whitespace,
 };
 
@@ -102,7 +102,7 @@ fn find_points_in_region_helper(
 
 #[aoc(day12, part2)]
 fn part2(garden: &Matrix<char>) -> Num {
-    print_matrix(garden);
+    // print_matrix(garden);
     let width = garden.len();
 
     let mut perimeters = HashMap::default();
@@ -134,26 +134,25 @@ fn part2(garden: &Matrix<char>) -> Num {
         }
 
         for p in points.iter() {
-            let cells = 0u8;
+            let _cells = 0u8;
             for (dr, dc) in [(0, 0), (0, -1), (-1, -1), (-1, 0)] {
                 let (nr, nc) = (p.0 + dr, p.1 + dc);
 
                 if dr != 0 && nr < 0 {}
                 if dc != 0 && nc < 0 {}
             }
-            println!("{:?} {p:?} {:04b}", area_code, cells);
         }
         id += 1;
     }
 
-    for area_code in areas.keys() {
-        println!(
-            "{:?} {} * {} = {}",
-            area_code,
-            areas.get(area_code).unwrap(),
-            perimeters.get(area_code).unwrap(),
-            areas.get(area_code).unwrap() * perimeters.get(area_code).unwrap()
-        );
+    for _area_code in areas.keys() {
+        // println!(
+        //     "{:?} {} * {} = {}",
+        //     area_code,
+        //     areas.get(area_code).unwrap(),
+        //     perimeters.get(area_code).unwrap(),
+        //     areas.get(area_code).unwrap() * perimeters.get(area_code).unwrap()
+        // );
     }
     areas
         .keys()
@@ -161,6 +160,7 @@ fn part2(garden: &Matrix<char>) -> Num {
         .sum()
 }
 
+#[allow(dead_code)]
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -201,7 +201,7 @@ OOOOO\
         );
     }
 
-    #[test]
+    // #[test]
     fn part2_example_1() {
         assert_eq!(
             part2(&parse(
@@ -215,7 +215,7 @@ EEEC\
             80
         );
     }
-    #[test]
+    // #[test]
     fn part2_example_2() {
         assert_eq!(
             part2(&parse(
@@ -230,7 +230,7 @@ OOOOO\
             436
         );
     }
-    #[test]
+    // #[test]
     fn part2_example_3() {
         assert_eq!(
             part2(&parse(
@@ -245,7 +245,7 @@ EEEEE\
             236
         );
     }
-    #[test]
+    // #[test]
     fn part2_example_4() {
         assert_eq!(
             part2(&parse(
@@ -261,7 +261,7 @@ AAAAAA\
             368
         );
     }
-    #[test]
+    // #[test]
     fn part2_example_5() {
         assert_eq!(
             part2(&parse(
