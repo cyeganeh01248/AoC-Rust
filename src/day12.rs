@@ -31,9 +31,9 @@ fn part1(garden: &Matrix<char>) -> Num {
 
     let mut id = 1;
 
-    while not_checked.len() > 0 {
+    while !not_checked.is_empty() {
         // pop off an element
-        let (r, c) = not_checked.iter().next().unwrap().clone();
+        let (r, c) = *not_checked.iter().next().unwrap();
         not_checked.remove(&(r, c));
         let cell_code = garden[r as usize][c as usize];
         let area_code = (id, cell_code);
@@ -42,7 +42,7 @@ fn part1(garden: &Matrix<char>) -> Num {
         areas.insert(area_code, points.len() as Num);
         perimeters.insert(area_code, 0 as Num);
         for p in points.iter() {
-            not_checked.remove(&p);
+            not_checked.remove(p);
             for (dr, dc) in [(0, 1), (1, 0), (0, -1), (-1, 0)] {
                 let (nr, nc) = (p.0 + dr, p.1 + dc);
                 if nr < 0
@@ -101,63 +101,8 @@ fn find_points_in_region_helper(
 }
 
 #[aoc(day12, part2)]
-fn part2(garden: &Matrix<char>) -> Num {
-    // print_matrix(garden);
-    let width = garden.len();
-
-    let mut perimeters = HashMap::default();
-    let mut areas = HashMap::default();
-
-    let mut not_checked = HashSet::default();
-    not_checked.reserve(width * width);
-    for r in 0..width {
-        for c in 0..width {
-            not_checked.insert((r as isize, c as isize));
-        }
-    }
-
-    let mut id = 1;
-
-    while not_checked.len() > 0 {
-        // pop off an element
-        let (r, c) = not_checked.iter().next().unwrap().clone();
-        not_checked.remove(&(r, c));
-        let cell_code = garden[r as usize][c as usize];
-        let area_code = (id, cell_code);
-
-        let mut points = find_points_in_region(garden, r, c);
-        areas.insert(area_code, points.len() as Num);
-        perimeters.insert(area_code, 0 as Num);
-        for p in points.clone().iter() {
-            points.insert((p.0 + 1, p.1 + 1));
-            not_checked.remove(&p);
-        }
-
-        for p in points.iter() {
-            let _cells = 0u8;
-            for (dr, dc) in [(0, 0), (0, -1), (-1, -1), (-1, 0)] {
-                let (nr, nc) = (p.0 + dr, p.1 + dc);
-
-                if dr != 0 && nr < 0 {}
-                if dc != 0 && nc < 0 {}
-            }
-        }
-        id += 1;
-    }
-
-    for _area_code in areas.keys() {
-        // println!(
-        //     "{:?} {} * {} = {}",
-        //     area_code,
-        //     areas.get(area_code).unwrap(),
-        //     perimeters.get(area_code).unwrap(),
-        //     areas.get(area_code).unwrap() * perimeters.get(area_code).unwrap()
-        // );
-    }
-    areas
-        .keys()
-        .map(|area_code| areas.get(area_code).unwrap() * perimeters.get(area_code).unwrap())
-        .sum()
+fn part2(_garden: &Matrix<char>) -> Num {
+    todo!()
 }
 
 #[allow(dead_code)]
