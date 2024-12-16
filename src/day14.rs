@@ -93,7 +93,7 @@ fn part2(input: &[Robot]) -> u32 {
             return i + 1;
         }
     }
-    return 0;
+    0
 }
 
 #[cfg(test)]

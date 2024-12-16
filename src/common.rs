@@ -50,7 +50,7 @@ where
                 .pad_to_width_with_alignment(max_len, Alignment::Left);
             write!(file, "{}", s).expect("Unable to write to file");
         }
-        write!(file, "\n").expect("Unable to write to file");
+        writeln!(file).expect("Unable to write to file");
     }
 }
 #[allow(dead_code)]
@@ -71,6 +71,6 @@ where
                 .pad_to_width_with_alignment(max_len, Alignment::Left);
             write!(file, "{}{space}", s).expect("Unable to write to file");
         }
-        write!(file, "\n").expect("Unable to write to file");
+        writeln!(file).expect("Unable to write to file");
     }
 }
