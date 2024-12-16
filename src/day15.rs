@@ -1,10 +1,6 @@
 use aoc_runner_derive::{aoc, aoc_generator};
-use std::{collections::VecDeque, io::Write};
 
-use crate::{
-    common::{print_matrix, HashSet, Matrix},
-    parsers::v_grid_no_whitespace,
-};
+use crate::{common::Matrix, parsers::v_grid_no_whitespace};
 
 type Num = u64;
 
@@ -51,9 +47,6 @@ fn part1((grid, moves, (robot_r, robot_c)): &(Matrix<char>, Vec<u8>, (i64, i64))
     let mut robot_r = *robot_r;
     let mut robot_c = *robot_c;
     for robot_move in moves {
-        if grid[robot_r as usize][robot_c as usize] != '@' {
-            panic!("Robot was unaligned");
-        }
         let (dr, dc) = match robot_move {
             0 => (-1, 0),
             1 => (0, 1),
@@ -90,10 +83,14 @@ fn part1((grid, moves, (robot_r, robot_c)): &(Matrix<char>, Vec<u8>, (i64, i64))
             robot_c += dc;
         }
     }
+    sum_gps(&grid)
+}
+
+fn sum_gps(grid: &Matrix<char>) -> Num {
     let mut sum = 0;
     for (r, row) in grid.iter().enumerate() {
         for (c, cell) in row.iter().enumerate() {
-            if *cell == 'O' {
+            if *cell == 'O' || *cell == '[' {
                 sum += (r * 100 + c) as Num;
             }
         }
@@ -105,8 +102,8 @@ fn part1((grid, moves, (robot_r, robot_c)): &(Matrix<char>, Vec<u8>, (i64, i64))
 fn part2((grid, moves, (robot_r, robot_c)): &(Matrix<char>, Vec<u8>, (i64, i64))) -> Num {
     let mut wider_grid = vec![vec!['.'; 0]; grid.len()];
     for (r, row) in grid.iter().enumerate() {
-        for (c, cell) in row.iter().enumerate() {
-            let mut new_cell = match *cell {
+        for cell in row.iter() {
+            let new_cell = match *cell {
                 '.' => ('.', '.'),
                 'O' => ('[', ']'),
                 '#' => ('#', '#'),
@@ -119,21 +116,61 @@ fn part2((grid, moves, (robot_r, robot_c)): &(Matrix<char>, Vec<u8>, (i64, i64))
     }
     let mut robot_r = *robot_r;
     let mut robot_c = *robot_c * 2;
-    println!();
     for robot_move in moves {
-        println!("before");
-        print_matrix(&wider_grid);
         move_robot(&mut wider_grid, &mut robot_r, &mut robot_c, *robot_move);
-        println!("after");
-        print_matrix(&wider_grid);
     }
-    todo!()
+    sum_gps(&wider_grid)
 }
 fn move_robot(grid: &mut Matrix<char>, robot_r: &mut i64, robot_c: &mut i64, robot_move: u8) {
-    move_object(grid, *robot_r, *robot_c, robot_move);
+    let (result, mut objects_to_move) = get_objects_to_move(grid, *robot_r, *robot_c, robot_move);
+    if !result {
+        return;
+    }
+    let (dr, dc) = match robot_move {
+        0 => {
+            objects_to_move.sort_by(|(r1, _, _), (r2, _, _)| r1.cmp(r2));
+            (-1, 0)
+        }
+        1 => {
+            objects_to_move.sort_by(|(_, c1, _), (_, c2, _)| c2.cmp(c1));
+            (0, 1)
+        }
+        2 => {
+            objects_to_move.sort_by(|(r1, _, _), (r2, _, _)| r2.cmp(r1));
+            (1, 0)
+        }
+        3 => {
+            objects_to_move.sort_by(|(_, c1, _), (_, c2, _)| c1.cmp(c2));
+            (0, -1)
+        }
+        _ => unreachable!(),
+    };
+
+    // let
+    if robot_move == 0 || robot_move == 2 {
+        for (r, c, t) in objects_to_move.iter() {
+            grid[*r as usize][*c as usize] = '.';
+            grid[(r + dr) as usize][(c + dc) as usize] = *t;
+        }
+        grid[*robot_r as usize][*robot_c as usize] = '.';
+        *robot_r += dr;
+        *robot_c += dc;
+    } else {
+        for (r, c, _) in objects_to_move.iter() {
+            grid[(r + dr) as usize][(c + dc) as usize] = grid[*r as usize][*c as usize];
+        }
+        grid[*robot_r as usize][*robot_c as usize] = '.';
+        *robot_r += dr;
+        *robot_c += dc;
+    }
 }
 
-fn move_object(grid: &mut Matrix<char>, object_r: i64, object_c: i64, object_move: u8) -> bool {
+fn get_objects_to_move(
+    grid: &Matrix<char>,
+    object_r: i64,
+    object_c: i64,
+    object_move: u8,
+) -> (bool, Vec<(i64, i64, char)>) {
     let (dr, dc) = match object_move {
         0 => (-1, 0),
         1 => (0, 1),
@@ -141,34 +178,56 @@ fn move_object(grid: &mut Matrix<char>, object_r: i64, object_c: i64, object_mov
         3 => (0, -1),
         _ => unreachable!(),
     };
-    let (nr, nc) = (object_r + dr, object_c + dc);
-    if grid[nr as usize][nc as usize] == '.' {
-        grid[nr as usize][nc as usize] = grid[object_r as usize][object_c as usize];
-        return true;
-    } else if grid[nr as usize][nc as usize] == '#' {
-        return false;
-    } else if grid[nr as usize][nc as usize] == '[' {
-        let result = move_object(grid, nr + dr, nc + dc, object_move);
-        if result {
-            grid[nr as usize][nc as usize] = grid[object_r as usize][object_c as usize];
-            if object_move == 0 || object_move == 2 {
-                grid[nr as usize][(nc + 1) as usize] = '.';
+
+    match grid[object_r as usize][object_c as usize] {
+        '.' => (true, vec![]),
+        '[' => {
+            let (result, mut objects_straight) =
+                get_objects_to_move(grid, object_r + dr, object_c + dc, object_move);
+            if !result {
+                return (false, vec![]);
             }
-        }
-        return result;
-    } else if grid[nr as usize][nc as usize] == ']' {
-        let result = move_object(grid, nr + dr, nc + dc, object_move);
-        if result {
-            grid[nr as usize][nc as usize] = grid[object_r as usize][object_c as usize];
+            objects_straight.push((object_r, object_c, '['));
             if object_move == 0 || object_move == 2 {
-                grid[nr as usize][(nc - 1) as usize] = '.';
+                objects_straight.push((object_r, object_c + 1, ']'));
+                let (result, objects_right) =
+                    get_objects_to_move(grid, object_r + dr, object_c + dc + 1, object_move);
+                if !result {
+                    return (false, vec![]);
+                }
+                objects_straight.extend(objects_right);
             }
+            (true, objects_straight)
         }
-        return result;
-    } else {
-        let result = move_object(grid, nr + dr, nc + dc, object_move);
-        grid[nr as usize][nc as usize] = grid[object_r as usize][object_c as usize];
-        return result;
+        ']' => {
+            let (result, mut objects_straight) =
+                get_objects_to_move(grid, object_r + dr, object_c + dc, object_move);
+            if !result {
+                return (false, vec![]);
+            }
+            objects_straight.push((object_r, object_c, ']'));
+            if object_move == 0 || object_move == 2 {
+                objects_straight.push((object_r, object_c - 1, '['));
+                let (result, objects_left) =
+                    get_objects_to_move(grid, object_r + dr, object_c + dc - 1, object_move);
+                if !result {
+                    return (false, vec![]);
+                }
+                objects_straight.extend(objects_left);
+            }
+            (true, objects_straight)
+        }
+        '#' => (false, vec![]),
+        '@' => {
+            let (result, mut objects_straight) =
+                get_objects_to_move(grid, object_r + dr, object_c + dc, object_move);
+            if !result {
+                return (false, vec![]);
+            }
+            objects_straight.push((object_r, object_c, '@'));
+            (true, objects_straight)
+        }
+        _ => unreachable!(),
     }
 }
 

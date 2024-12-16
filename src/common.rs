@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::io::stdout;
 use std::io::Write;
 
 pub use fxhash::FxHashMap as HashMap;
