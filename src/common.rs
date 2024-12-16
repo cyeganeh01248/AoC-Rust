@@ -21,7 +21,21 @@ pub fn print_matrix<T>(matrix: &Matrix<T>)
 where
     T: Display,
 {
-    write_matrix(matrix, &mut stdout());
+    let mut max_len = 0;
+    for row in matrix.iter() {
+        for item in row.iter() {
+            max_len = max_len.max(item.to_string().len());
+        }
+    }
+    for row in matrix {
+        for item in row {
+            let s = item
+                .to_string()
+                .pad_to_width_with_alignment(max_len, Alignment::Left);
+            print!("{}", s);
+        }
+        println!();
+    }
 }
 
 #[allow(dead_code)]
@@ -29,7 +43,21 @@ pub fn print_matrix_spaced<T>(matrix: &Matrix<T>, space: String)
 where
     T: Display,
 {
-    write_matrix_spaced(matrix, &mut stdout(), space);
+    let mut max_len = 0;
+    for row in matrix.iter() {
+        for item in row.iter() {
+            max_len = max_len.max(item.to_string().len());
+        }
+    }
+    for row in matrix {
+        for item in row {
+            let s = item
+                .to_string()
+                .pad_to_width_with_alignment(max_len, Alignment::Left);
+            print!("{}{space}", s);
+        }
+        println!();
+    }
 }
 
 #[allow(dead_code)]
