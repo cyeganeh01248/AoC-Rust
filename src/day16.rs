@@ -1,10 +1,6 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::{
-    common::{print_matrix, Matrix},
-    parsers::v_grid_no_whitespace,
-};
-use std::{fmt::Display, rc::Rc};
+use crate::{common::Matrix, parsers::v_grid_no_whitespace};
 
 type Num = u64;
 
@@ -30,47 +26,10 @@ fn parse(input: &str) -> (Matrix<char>, (isize, isize), (isize, isize)) {
 }
 
 #[aoc(day16, part1)]
-fn part1((grid, start, end): &(Matrix<char>, (isize, isize), (isize, isize))) -> Num {
-    a_star(grid.to_owned(), *start, *end);
+fn part1((_grid, _start, _end): &(Matrix<char>, (isize, isize), (isize, isize))) -> Num {
     todo!()
 }
 
-#[derive(Debug, Clone)]
-struct Node {
-    g: isize,
-    h: isize,
-    f: isize,
-    c: char,
-    p: (isize, isize),
-    parent: Option<Rc<Node>>,
-}
-impl Display for Node {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.c)
-    }
-}
-
-// https://www.geeksforgeeks.org/a-search-algorithm/
-fn a_star(grid: Matrix<char>, start: (isize, isize), end: (isize, isize)) -> Vec<(isize, isize)> {
-    let mut nodes = Matrix::default();
-    for (r, row) in grid.iter().enumerate() {
-        let mut row_add = vec![];
-        for (c, cell) in row.iter().enumerate() {
-            row_add.push(Node {
-                g: 0,
-                h: 0,
-                f: 0,
-                c: *cell,
-                p: (r as isize, c as isize),
-                parent: None,
-            });
-        }
-        nodes.push(row_add);
-    }
-
-    print_matrix(&nodes);
-    todo!()
-}
 // #[aoc(day16, part2)]
 // fn part2((grid, start, end): &(Matrix<char>, (isize, isize), (isize, isize))) -> Num {
 //     todo!()
