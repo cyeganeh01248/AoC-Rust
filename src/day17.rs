@@ -78,6 +78,10 @@ impl Machine {
         self.I += 2;
         true
     }
+    fn step_till_end(&mut self) -> String {
+        while self.step() {}
+        self.output()
+    }
     fn output(&self) -> String {
         self.O.join(",")
     }
@@ -132,54 +136,37 @@ fn parse(input: &str) -> (Machine, String) {
 #[aoc(day17, part1)]
 fn part1((input, _): &(Machine, String)) -> String {
     let mut machine = input.to_owned();
-    while machine.step() {}
-    machine.output()
+    machine.step_till_end()
 }
 
 #[aoc(day17, part2)]
 fn part2((input, program): &(Machine, String)) -> BigInt {
-    let program = program.to_owned().chars().collect::<Vec<_>>();
-    let program_str = program.iter().collect::<String>();
-    let mut a_raw = BigInt::from(0);
-    let mut i = 1;
-    'outer: loop {
-        println!("{a_raw}");
-        let a = a_raw.clone();
-        let mut machine = input.to_owned();
-        machine.A = a;
-        while machine.step() {}
-        let output = machine.output().chars().collect::<Vec<_>>();
-        if output == program {
-            return a_raw;
-        }
+    let expected = program.split(",").map(|x| x.parse().unwrap()).collect();
+    find_solution(input, &expected, BigInt::from(0), 1).unwrap()
+}
 
-        let mut matc = true;
-        for j in 0..i {
-            if j > output.len() {
-                break;
-            }
-            println!(
-                "{} {}",
-                output[output.len() - j - 1],
-                program[program.len() - j - 1]
-            );
-            if output[output.len() - j - 1] == program[program.len() - j - 1] {
-                matc = false;
-            }
-        }
-        if matc {
-            a_raw *= 8;
-            i += 1;
-        } else {
-            a_raw += 1;
-        }
-        // if output.chars().nth(output.len() - i * 2).unwrap() == program[program.len() - i * 2] {
-        // a_raw *= 8;
-        // i += 1;
-        // } else {
-        // a_raw += 1;
-        // }
+fn find_solution(base_machine: &Machine, program: &Vec<u8>, a: BigInt, n: usize) -> Option<BigInt> {
+    if n > program.len() {
+        return Some(a);
     }
+    for i in 0..8 {
+        let a2 = a.clone() * BigInt::from(8) + BigInt::from(i);
+        let mut machine = base_machine.clone();
+        machine.A = a2.clone();
+        let out = machine
+            .step_till_end()
+            .split(",")
+            .map(|i| i.parse::<u8>().unwrap())
+            .collect::<Vec<_>>();
+        let target = program.clone()[(program.len() - n)..].to_vec();
+        if out == target {
+            let res = find_solution(base_machine, program, a2, n + 1);
+            if res.is_some() {
+                return res;
+            }
+        }
+    }
+    None
 }
 
 #[cfg(test)]
