@@ -105,8 +105,9 @@ where
 use std::cmp::Reverse; // Import Ordering and Reverse from cmp module.
 use std::collections::BinaryHeap;
 
+#[allow(clippy::needless_range_loop)]
 pub fn dijkstra(
-    grid: &Vec<Vec<char>>,
+    grid: &Matrix<char>,
     start_pos: (usize, usize),
 ) -> HashMap<(usize, usize), Option<(usize, usize)>> {
     let rows = grid.len();
@@ -162,3 +163,4 @@ pub fn dijkstra(
     }
     previous_points // Return the map of shortest paths from start position to every other reachable point on grid.
 }
+pub const DIRS: [(isize, isize); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];

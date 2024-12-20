@@ -1,11 +1,11 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::common::HashSet;
+use regex::Regex;
 
 #[aoc_generator(day19)]
 fn parse(input: &str) -> (Vec<String>, Vec<String>) {
     let split: Vec<&str> = input.split("\n\n").collect();
-    let mut towels = split[0]
+    let towels = split[0]
         .split(", ")
         .map(|s| s.to_string())
         .collect::<Vec<String>>();
@@ -26,7 +26,7 @@ fn part1((towels, patterns): &(Vec<String>, Vec<String>)) -> usize {
     let re = Regex::new(&pattern).unwrap();
 
     patterns
-        .into_iter()
+        .iter()
         .map(|haystack| {
             let occurances = re.find_iter(haystack).count();
             if occurances > 0 {
@@ -38,9 +38,8 @@ fn part1((towels, patterns): &(Vec<String>, Vec<String>)) -> usize {
         .sum()
 }
 
-use regex::{bytes::RegexSet, Regex};
 #[aoc(day19, part2)]
-fn part2((full_towels, patterns): &(Vec<String>, Vec<String>)) -> usize {
+fn part2((_full_towels, _patterns): &(Vec<String>, Vec<String>)) -> usize {
     todo!()
 }
 

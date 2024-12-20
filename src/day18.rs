@@ -1,6 +1,6 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::common::{dijkstra, print_matrix};
+use crate::common::dijkstra;
 
 #[aoc_generator(day18)]
 fn parse(input: &str) -> Vec<(u8, u8)> {
@@ -46,14 +46,14 @@ fn list_to_grid(input: &[(u8, u8)]) -> Vec<Vec<char>> {
 #[aoc(day18, part1)]
 fn part1(input: &[(u8, u8)]) -> u16 {
     let grid = list_to_grid(&input[..1024]);
-    print_matrix(&grid);
-    let t = dijkstra(&grid, (1, 1));
-    println!("{:?}", t);
+    // print_matrix(&grid);
+    let _t = dijkstra(&grid, (1, 1));
+    // println!("{:?}", t);
     todo!()
 }
 
 #[aoc(day18, part2)]
-fn part2(input: &[(u8, u8)]) -> String {
+fn part2(_input: &[(u8, u8)]) -> String {
     todo!()
 }
 
@@ -91,9 +91,9 @@ mod tests {
 1,6
 2,0",
         ));
-        let t = dijkstra(&grid, (1, 1));
-        println!("{:?}", t);
-        assert!(false);
+        let _t = dijkstra(&grid, (1, 1));
+        // println!("{:?}", t) ;
+        // assert!(false);
     }
 
     #[test]
