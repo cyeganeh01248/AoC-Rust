@@ -2,7 +2,7 @@
 
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::{common::Matrix, parsers::v_grid_no_whitespace};
+use crate::{common::MyMatrix, parsers::v_grid_no_whitespace};
 
 use crate::common::{HashMap, HashSet};
 
@@ -10,7 +10,7 @@ type Num = u16;
 
 #[aoc_generator(day8)]
 fn parse(input: &str) -> (HashMap<char, Vec<(isize, isize)>>, usize, usize) {
-    let grid: Matrix<char> = v_grid_no_whitespace(input);
+    let grid: MyMatrix<char> = v_grid_no_whitespace(input);
     let mut antennas = HashMap::default();
     for (row, row_chars) in grid.iter().enumerate() {
         for (col, code) in row_chars.iter().enumerate() {

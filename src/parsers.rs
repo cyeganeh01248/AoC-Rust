@@ -1,9 +1,9 @@
 #![allow(dead_code)]
 use std::{any::type_name, str::FromStr};
 
-use crate::common::Matrix;
+use crate::common::MyMatrix;
 
-pub fn v_grid_by_whitespace<T>(input: &str) -> Matrix<T>
+pub fn v_grid_by_whitespace<T>(input: &str) -> MyMatrix<T>
 where
     T: FromStr,
 {
@@ -20,7 +20,7 @@ where
         .collect()
 }
 
-pub fn v_grid_no_whitespace<T>(input: &str) -> Matrix<T>
+pub fn v_grid_no_whitespace<T>(input: &str) -> MyMatrix<T>
 where
     T: FromStr,
 {

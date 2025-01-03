@@ -1,11 +1,11 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::{common::Matrix, parsers::v_grid_no_whitespace};
+use crate::{common::MyMatrix, parsers::v_grid_no_whitespace};
 
 type Num = u64;
 
 #[aoc_generator(day15)]
-fn parse(input: &str) -> (Matrix<char>, Vec<u8>, (i64, i64)) {
+fn parse(input: &str) -> (MyMatrix<char>, Vec<u8>, (i64, i64)) {
     let mut i = input.split("\n\n");
     let top = i.next().unwrap();
     let bottom = i.next().unwrap().replace("\n", "");
@@ -42,7 +42,7 @@ fn parse(input: &str) -> (Matrix<char>, Vec<u8>, (i64, i64)) {
 }
 
 #[aoc(day15, part1)]
-fn part1((grid, moves, (robot_r, robot_c)): &(Matrix<char>, Vec<u8>, (i64, i64))) -> Num {
+fn part1((grid, moves, (robot_r, robot_c)): &(MyMatrix<char>, Vec<u8>, (i64, i64))) -> Num {
     let mut grid = grid.to_owned();
     let mut robot_r = *robot_r;
     let mut robot_c = *robot_c;
@@ -86,7 +86,7 @@ fn part1((grid, moves, (robot_r, robot_c)): &(Matrix<char>, Vec<u8>, (i64, i64))
     sum_gps(&grid)
 }
 
-fn sum_gps(grid: &Matrix<char>) -> Num {
+fn sum_gps(grid: &MyMatrix<char>) -> Num {
     let mut sum = 0;
     for (r, row) in grid.iter().enumerate() {
         for (c, cell) in row.iter().enumerate() {
@@ -99,7 +99,7 @@ fn sum_gps(grid: &Matrix<char>) -> Num {
 }
 
 #[aoc(day15, part2)]
-fn part2((grid, moves, (robot_r, robot_c)): &(Matrix<char>, Vec<u8>, (i64, i64))) -> Num {
+fn part2((grid, moves, (robot_r, robot_c)): &(MyMatrix<char>, Vec<u8>, (i64, i64))) -> Num {
     let mut wider_grid = vec![vec!['.'; 0]; grid.len()];
     for (r, row) in grid.iter().enumerate() {
         for cell in row.iter() {
@@ -121,7 +121,7 @@ fn part2((grid, moves, (robot_r, robot_c)): &(Matrix<char>, Vec<u8>, (i64, i64))
     }
     sum_gps(&wider_grid)
 }
-fn move_robot(grid: &mut Matrix<char>, robot_r: &mut i64, robot_c: &mut i64, robot_move: u8) {
+fn move_robot(grid: &mut MyMatrix<char>, robot_r: &mut i64, robot_c: &mut i64, robot_move: u8) {
     let (result, mut objects_to_move) = get_objects_to_move(grid, *robot_r, *robot_c, robot_move);
     if !result {
         return;
@@ -166,7 +166,7 @@ fn move_robot(grid: &mut Matrix<char>, robot_r: &mut i64, robot_c: &mut i64, rob
 }
 
 fn get_objects_to_move(
-    grid: &Matrix<char>,
+    grid: &MyMatrix<char>,
     object_r: i64,
     object_c: i64,
     object_move: u8,

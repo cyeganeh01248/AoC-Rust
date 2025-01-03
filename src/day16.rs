@@ -1,11 +1,11 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::{common::Matrix, parsers::v_grid_no_whitespace};
+use crate::{common::MyMatrix, parsers::v_grid_no_whitespace};
 
 type Num = u64;
 
 #[aoc_generator(day16)]
-fn parse(input: &str) -> (Matrix<char>, (isize, isize), (isize, isize)) {
+fn parse(input: &str) -> (MyMatrix<char>, (isize, isize), (isize, isize)) {
     let mut grid = v_grid_no_whitespace(input);
     let mut start = (0, 0);
     let mut end = (0, 0);
@@ -26,7 +26,7 @@ fn parse(input: &str) -> (Matrix<char>, (isize, isize), (isize, isize)) {
 }
 
 #[aoc(day16, part1)]
-fn part1((_grid, _start, _end): &(Matrix<char>, (isize, isize), (isize, isize))) -> Num {
+fn part1((_grid, _start, _end): &(MyMatrix<char>, (isize, isize), (isize, isize))) -> Num {
     todo!()
 }
 

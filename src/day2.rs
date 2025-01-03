@@ -1,11 +1,11 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::{common::Matrix, parsers::v_grid_by_whitespace};
+use crate::{common::MyMatrix, parsers::v_grid_by_whitespace};
 
 type Num = i16;
 
 #[aoc_generator(day2)]
-fn parse(input: &str) -> Matrix<Num> {
+fn parse(input: &str) -> MyMatrix<Num> {
     v_grid_by_whitespace(input)
 }
 
@@ -29,7 +29,7 @@ fn is_safe(report: &[Num]) -> bool {
 }
 
 #[aoc(day2, part1)]
-fn part1(input: &Matrix<Num>) -> Num {
+fn part1(input: &MyMatrix<Num>) -> Num {
     input
         .iter()
         .map(|report| if is_safe(report) { 1 } else { 0 })
@@ -37,7 +37,7 @@ fn part1(input: &Matrix<Num>) -> Num {
 }
 
 #[aoc(day2, part2)]
-fn part2(input: &Matrix<Num>) -> Num {
+fn part2(input: &MyMatrix<Num>) -> Num {
     input
         .iter()
         .map(|report| {

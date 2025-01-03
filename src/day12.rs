@@ -1,21 +1,21 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
 use crate::{
-    common::{HashMap, HashSet, Matrix},
+    common::{HashMap, HashSet, MyMatrix},
     parsers::v_grid_no_whitespace,
 };
 
 type Num = u64;
 
 #[aoc_generator(day12)]
-fn parse(input: &str) -> Matrix<char> {
+fn parse(input: &str) -> MyMatrix<char> {
     let grid = v_grid_no_whitespace(input);
     assert!(grid.len() == grid[0].len());
     grid
 }
 
 #[aoc(day12, part1)]
-fn part1(garden: &Matrix<char>) -> Num {
+fn part1(garden: &MyMatrix<char>) -> Num {
     let width = garden.len();
 
     let mut perimeters = HashMap::default();
@@ -66,14 +66,14 @@ fn part1(garden: &Matrix<char>) -> Num {
         .sum()
 }
 
-fn find_points_in_region(garden: &Matrix<char>, r: isize, c: isize) -> HashSet<(isize, isize)> {
+fn find_points_in_region(garden: &MyMatrix<char>, r: isize, c: isize) -> HashSet<(isize, isize)> {
     let mut points = HashSet::default();
     points.insert((r, c));
     find_points_in_region_helper(garden, r, c, &mut points);
     points
 }
 fn find_points_in_region_helper(
-    garden: &Matrix<char>,
+    garden: &MyMatrix<char>,
     r: isize,
     c: isize,
     points: &mut HashSet<(isize, isize)>,
@@ -101,7 +101,7 @@ fn find_points_in_region_helper(
 }
 
 #[aoc(day12, part2)]
-fn part2(_garden: &Matrix<char>) -> Num {
+fn part2(_garden: &MyMatrix<char>) -> Num {
     todo!()
 }
 

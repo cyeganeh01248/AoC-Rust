@@ -1,11 +1,11 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
 use crate::{
-    common::{HashMap, HashSet, Matrix, DIRS},
+    common::{HashMap, HashSet, MyMatrix, DIRS},
     parsers::v_grid_no_whitespace,
 };
 #[aoc_generator(day20)]
-fn parse(input: &str) -> (Matrix<char>, (isize, isize), (isize, isize)) {
+fn parse(input: &str) -> (MyMatrix<char>, (isize, isize), (isize, isize)) {
     let mut grid = v_grid_no_whitespace(input);
     let (mut start_r, mut start_c) = (0, 0);
     let (mut end_r, mut end_c) = (0, 0);
@@ -28,7 +28,7 @@ fn parse(input: &str) -> (Matrix<char>, (isize, isize), (isize, isize)) {
 
 #[aoc(day20, part1)]
 fn part1(
-    (grid, (start_r, start_c), (end_r, end_c)): &(Matrix<char>, (isize, isize), (isize, isize)),
+    (grid, (start_r, start_c), (end_r, end_c)): &(MyMatrix<char>, (isize, isize), (isize, isize)),
 ) -> usize {
     let normal_time =
         get_cost_graph(grid, (*start_r, *start_c), (*end_r, *end_c))[&(*start_r, *start_c)];
@@ -43,7 +43,7 @@ fn part1(
 }
 #[aoc(day20, part2)]
 fn part2(
-    (grid, (start_r, start_c), (end_r, end_c)): &(Matrix<char>, (isize, isize), (isize, isize)),
+    (grid, (start_r, start_c), (end_r, end_c)): &(MyMatrix<char>, (isize, isize), (isize, isize)),
 ) -> usize {
     let normal_time =
         get_cost_graph(grid, (*start_r, *start_c), (*end_r, *end_c))[&(*start_r, *start_c)];
@@ -62,7 +62,7 @@ fn part2(
 }
 
 fn get_path_lengths_with_cheating(
-    grid: &Matrix<char>,
+    grid: &MyMatrix<char>,
     (start_r, start_c): (isize, isize),
     (end_r, end_c): (isize, isize),
     cheat_cnt: usize,
@@ -115,7 +115,7 @@ fn get_path_lengths_with_cheating(
     finish_times
 }
 fn get_cost_graph(
-    grid: &Matrix<char>,
+    grid: &MyMatrix<char>,
     (start_r, start_c): (isize, isize),
     (end_r, end_c): (isize, isize),
 ) -> HashMap<(isize, isize), usize> {

@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use std::fmt::Display;
 use std::io::Write;
 
@@ -6,7 +7,7 @@ pub use fxhash::FxHashSet as HashSet;
 use pad::Alignment;
 use pad::PadStr;
 
-pub type Matrix<T> = Vec<Vec<T>>;
+pub type MyMatrix<T> = Vec<Vec<T>>;
 
 pub fn int_len<T>(num: T) -> u32
 where
@@ -15,8 +16,7 @@ where
     f64::from(num).log10().floor() as u32 + 1u32
 }
 
-#[allow(dead_code)]
-pub fn print_matrix<T>(matrix: &Matrix<T>)
+pub fn print_matrix<T>(matrix: &MyMatrix<T>)
 where
     T: Display,
 {
@@ -37,8 +37,7 @@ where
     }
 }
 
-#[allow(dead_code)]
-pub fn print_matrix_spaced<T>(matrix: &Matrix<T>, space: String)
+pub fn print_matrix_spaced<T>(matrix: &MyMatrix<T>, space: String)
 where
     T: Display,
 {
@@ -59,8 +58,7 @@ where
     }
 }
 
-#[allow(dead_code)]
-pub fn write_matrix<T>(matrix: &Matrix<T>, file: &mut impl Write)
+pub fn write_matrix<T>(matrix: &MyMatrix<T>, file: &mut impl Write)
 where
     T: Display,
 {
@@ -80,8 +78,7 @@ where
         writeln!(file).expect("Unable to write to file");
     }
 }
-#[allow(dead_code)]
-pub fn write_matrix_spaced<T>(matrix: &Matrix<T>, file: &mut impl Write, space: String)
+pub fn write_matrix_spaced<T>(matrix: &MyMatrix<T>, file: &mut impl Write, space: String)
 where
     T: Display,
 {
@@ -101,66 +98,77 @@ where
         writeln!(file).expect("Unable to write to file");
     }
 }
+pub const DIRS: [(isize, isize); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
-use std::cmp::Reverse; // Import Ordering and Reverse from cmp module.
-use std::collections::BinaryHeap;
+pub mod maze_solving {
+    use pathfinding::{directed::bfs::bfs, matrix::Matrix};
 
-#[allow(clippy::needless_range_loop)]
-pub fn dijkstra(
-    grid: &Matrix<char>,
-    start_pos: (usize, usize),
-) -> HashMap<(usize, usize), Option<(usize, usize)>> {
-    let rows = grid.len();
-    let cols = if !grid.is_empty() { grid[0].len() } else { 0 };
-
-    // Define possible directions to move (up, down, left, right).
-    const DIRECTIONS: [(i32, i32); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
-
-    let mut distances: HashMap<(usize, usize), usize> = HashMap::default();
-    let mut previous_points: HashMap<(usize, usize), Option<(usize, usize)>> = HashMap::default();
-    let mut priority_queue = BinaryHeap::new(); // This will act as our min heap.
-
-    // Initialize distances and previous points.
-    for row in 0..rows {
-        for col in 0..cols {
-            if grid[row][col] != '#' {
-                // Ignore walls ('#').
-                let point = (row, col);
-                distances.insert(point, usize::MAX);
-                previous_points.insert(point, None);
-            }
-        }
+    pub fn parse_maze(maze_str: &str) -> Matrix<char> {
+        let maze_vec = maze_str
+            .lines()
+            .map(|line| line.chars().collect::<Vec<char>>())
+            .collect::<Vec<Vec<char>>>();
+        Matrix::from_fn(maze_vec.len(), maze_vec[0].len(), |(r, c)| maze_vec[r][c])
     }
-    *distances.get_mut(&start_pos).unwrap() = 0; // Set the distance of start position to zero.
-    priority_queue.push((Reverse(0), start_pos)); // Start from the given point (distance is wrapped with Reverse to act as min heap)
 
-    while let Some((Reverse(_), current)) = priority_queue.pop() {
-        // Unwrap distance when popping from queue.
-        for direction in DIRECTIONS {
-            // For each possible movement...
-            let new_row = current.0 as i32 + direction.0; // Calculate the row of the next point based on the direction and current position.
-            let new_col = current.1 as i32 + direction.1; // Calculate the column of the next point based on the direction and current position.
-
-            if new_row >= 0
-                && (new_row as usize) < rows
-                && new_col >= 0
-                && (new_col as usize) < cols
-            {
-                // If the next point is within grid bounds...
-                let next = ((new_row as usize), (new_col as usize));
-                if grid[next.0][next.1] != '#' {
-                    // And it's not a wall...
-                    let distance = distances[&current] + 1; // Calculate new distance to the next point.
-                    if distance < distances[&next] {
-                        // If this path is shorter than any known so far...
-                        *distances.get_mut(&next).unwrap() = distance; // Update shortest known path to this point.
-                        *previous_points.get_mut(&next).unwrap() = Some(current); // And update the previous point on that shortest path.
-                        priority_queue.push((Reverse(distance), next)); // Add it to our queue (wrapping distance with Reverse) for further exploration.
-                    }
+    pub fn parse_maze_with_start_end(
+        maze_str: &str,
+    ) -> (Matrix<char>, (usize, usize), (usize, usize)) {
+        let mut maze_vec = maze_str
+            .lines()
+            .map(|line| line.chars().collect::<Vec<char>>())
+            .collect::<Vec<Vec<char>>>();
+        let mut start = (0, 0);
+        let mut end = (0, 0);
+        for (r, row) in maze_vec.iter_mut().enumerate() {
+            for (c, cell) in row.iter_mut().enumerate() {
+                if *cell == 'S' {
+                    start = (r, c);
+                    *cell = '.';
+                }
+                if *cell == 'E' {
+                    end = (r, c);
+                    *cell = '.';
                 }
             }
         }
+
+        (
+            Matrix::from_fn(maze_vec.len(), maze_vec[0].len(), |(r, c)| maze_vec[r][c]),
+            start,
+            end,
+        )
     }
-    previous_points // Return the map of shortest paths from start position to every other reachable point on grid.
+
+    pub fn solve_maze(
+        maze: &Matrix<char>,
+        start: (usize, usize),
+        end: (usize, usize),
+    ) -> Option<Vec<(usize, usize)>> {
+        bfs(
+            &start,
+            |(r, c)| {
+                let mut scs = vec![];
+                for dir in [(0, 1), (1, 0), (0, -1), (-1, 0)] {
+                    let (nr, nc) = ((*r as i32 + dir.0) as usize, (*c as i32 + dir.1) as usize);
+                    if let Some(cell) = maze.get((nr, nc)) {
+                        if *cell == '.' {
+                            scs.push((nr, nc));
+                        }
+                    }
+                }
+                scs
+            },
+            |p| *p == end,
+        )
+    }
+
+    pub fn print_maze(maze: &Matrix<char>) {
+        for row in maze.iter() {
+            for cell in row {
+                print!("{}", cell);
+            }
+            println!();
+        }
+    }
 }
-pub const DIRS: [(isize, isize); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
