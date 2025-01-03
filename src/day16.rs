@@ -1,39 +1,138 @@
 use aoc_runner_derive::{aoc, aoc_generator};
+use pathfinding::{
+    matrix::Matrix,
+    prelude::{astar_bag_collect, dijkstra},
+};
 
-use crate::{common::MyMatrix, parsers::v_grid_no_whitespace};
+use crate::common::maze_solving::parse_maze_with_start_end;
+use crate::common::HashSet;
 
 type Num = u64;
 
-#[aoc_generator(day16)]
-fn parse(input: &str) -> (MyMatrix<char>, (isize, isize), (isize, isize)) {
-    let mut grid = v_grid_no_whitespace(input);
-    let mut start = (0, 0);
-    let mut end = (0, 0);
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+enum Dirs {
+    Up,
+    Right,
+    Down,
+    Left,
+}
 
-    for (r, row) in grid.iter().enumerate() {
-        for (c, cell) in row.iter().enumerate() {
-            if *cell == 'S' {
-                start = (r as isize, c as isize);
-            }
-            if *cell == 'E' {
-                end = (r as isize, c as isize);
-            }
-        }
-    }
-    grid[start.0 as usize][start.1 as usize] = '.';
-    grid[end.0 as usize][end.1 as usize] = '.';
-    (grid, start, end)
+#[aoc_generator(day16)]
+fn parse(input: &str) -> (Matrix<char>, (usize, usize), (usize, usize)) {
+    parse_maze_with_start_end(input)
 }
 
 #[aoc(day16, part1)]
-fn part1((_grid, _start, _end): &(MyMatrix<char>, (isize, isize), (isize, isize))) -> Num {
-    todo!()
-}
+fn part1((maze, start, end): &(Matrix<char>, (usize, usize), (usize, usize))) -> Num {
+    let pos = (*start, Dirs::Right);
 
-// #[aoc(day16, part2)]
-// fn part2((grid, start, end): &(Matrix<char>, (isize, isize), (isize, isize))) -> Num {
-//     todo!()
-// }
+    let path = dijkstra(
+        &pos,
+        |((r, c), d)| {
+            let mut scs = vec![];
+            let dir_str = match d {
+                Dirs::Up => (-1, 0),
+                Dirs::Right => (0, 1),
+                Dirs::Down => (1, 0),
+                Dirs::Left => (0, -1),
+            };
+            let (nr, nc) = (*r as isize + dir_str.0, *c as isize + dir_str.1);
+            if let Some(cell) = maze.get((nr as usize, nc as usize)) {
+                if *cell == '.' {
+                    scs.push((((nr as usize, nc as usize), *d), 1));
+                }
+            }
+            scs.push((
+                (
+                    ({ *r }, { *c }),
+                    match d {
+                        Dirs::Up => Dirs::Right,
+                        Dirs::Right => Dirs::Down,
+                        Dirs::Down => Dirs::Left,
+                        Dirs::Left => Dirs::Up,
+                    },
+                ),
+                1000,
+            ));
+            scs.push((
+                (
+                    ({ *r }, { *c }),
+                    match d {
+                        Dirs::Up => Dirs::Left,
+                        Dirs::Right => Dirs::Up,
+                        Dirs::Down => Dirs::Right,
+                        Dirs::Left => Dirs::Down,
+                    },
+                ),
+                1000,
+            ));
+
+            scs
+        },
+        |p| p.0 == *end,
+    );
+    path.unwrap().1
+}
+#[aoc(day16, part2)]
+fn part2((maze, start, end): &(Matrix<char>, (usize, usize), (usize, usize))) -> Num {
+    let pos = (*start, Dirs::Right);
+
+    let paths = astar_bag_collect(
+        &pos,
+        |((r, c), d)| {
+            let mut scs = vec![];
+            let dir_str = match d {
+                Dirs::Up => (-1, 0),
+                Dirs::Right => (0, 1),
+                Dirs::Down => (1, 0),
+                Dirs::Left => (0, -1),
+            };
+            let (nr, nc) = (*r as isize + dir_str.0, *c as isize + dir_str.1);
+            if let Some(cell) = maze.get((nr as usize, nc as usize)) {
+                if *cell == '.' {
+                    scs.push((((nr as usize, nc as usize), *d), 1));
+                }
+            }
+            scs.push((
+                (
+                    ({ *r }, { *c }),
+                    match d {
+                        Dirs::Up => Dirs::Right,
+                        Dirs::Right => Dirs::Down,
+                        Dirs::Down => Dirs::Left,
+                        Dirs::Left => Dirs::Up,
+                    },
+                ),
+                1000,
+            ));
+            scs.push((
+                (
+                    ({ *r }, { *c }),
+                    match d {
+                        Dirs::Up => Dirs::Left,
+                        Dirs::Right => Dirs::Up,
+                        Dirs::Down => Dirs::Right,
+                        Dirs::Left => Dirs::Down,
+                    },
+                ),
+                1000,
+            ));
+
+            scs
+        },
+        |_| 1,
+        |p| p.0 == *end,
+    )
+    .unwrap();
+
+    let mut locations = HashSet::default();
+    for path in paths.0.iter() {
+        for (pos, _) in path.iter() {
+            locations.insert(*pos);
+        }
+    }
+    locations.len() as Num
+}
 
 #[cfg(test)]
 mod tests {
@@ -91,9 +190,56 @@ mod tests {
             11048
         );
     }
-
-    // #[test]
-    // fn part2_example() {
-    //     assert_eq!(part2(&parse("<EXAMPLE>")), "<RESULT>");
-    // }
+    #[test]
+    fn part2_example_1() {
+        assert_eq!(
+            part2(&parse(
+                "\
+###############
+#.......#....E#
+#.#.###.#.###.#
+#.....#.#...#.#
+#.###.#####.#.#
+#.#.#.......#.#
+#.#.#####.###.#
+#...........#.#
+###.#.#####.#.#
+#...#.....#.#.#
+#.#.#.###.#.#.#
+#.....#...#.#.#
+#.###.#.#.#.#.#
+#S..#.....#...#
+###############\
+            "
+            )),
+            45
+        );
+    }
+    #[test]
+    fn part2_example_2() {
+        assert_eq!(
+            part2(&parse(
+                "\
+#################
+#...#...#...#..E#
+#.#.#.#.#.#.#.#.#
+#.#.#.#...#...#.#
+#.#.#.#.###.#.#.#
+#...#.#.#.....#.#
+#.#.#.#.#.#####.#
+#.#...#.#.#.....#
+#.#.#####.#.###.#
+#.#.#.......#...#
+#.#.###.#####.###
+#.#.#...#.....#.#
+#.#.#.#####.###.#
+#.#.#.........#.#
+#.#.#.#########.#
+#S#.............#
+#################\
+            "
+            )),
+            64
+        );
+    }
 }
