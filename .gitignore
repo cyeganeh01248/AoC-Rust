@@ -1,5 +1,4 @@
-/target/
-/input/
-/results/run-results.txt
+target/
+input/
 
 .DS_Store
