@@ -1,7 +1,3 @@
-mod common;
-mod parsers;
-mod tests;
-
 extern crate aoc_runner;
 
 #[macro_use]
