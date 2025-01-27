@@ -1,0 +1,9 @@
+[package]
+name = "aoc-utils"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fxhash = "0.2.1"
+pad = "0.1.6"
+pathfinding = "4.14.0"

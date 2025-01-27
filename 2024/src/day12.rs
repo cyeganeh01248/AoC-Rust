@@ -1,6 +1,6 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::{
+use aoc_utils::{
     common::{HashMap, HashSet, MyMatrix},
     parsers::v_grid_no_whitespace,
 };

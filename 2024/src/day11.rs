@@ -1,6 +1,6 @@
-use crate::common::int_len;
-use crate::common::HashMap;
 use aoc_runner_derive::{aoc, aoc_generator};
+use aoc_utils::common::int_len;
+use aoc_utils::common::HashMap;
 
 type Num = u128;
 

@@ -16,7 +16,7 @@ run DAY="":
     if [ "$day" == "" ]; then
         day=$(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h -r | head -n 1)
     fi
-    cargo aoc input -d $day -y 2024
+    cargo aoc input -d $day -y 2023
     cargo aoc -d $day
 
 bench DAY="":
@@ -27,11 +27,11 @@ bench DAY="":
         day=$(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h -r | head -n 1)
     fi
 
-    cargo aoc input -d $day -y 2024
+    cargo aoc input -d $day -y 2023
     cargo aoc bench -d $day
 
 gen:
-    cargo aoc input -g -y 2024
+    cargo aoc input -g -y 2023
 
 test-all:
     cargo test day
@@ -40,7 +40,7 @@ run-all:
     #!/usr/bin/env bash
     for day in $(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h); do
         echo -------------- AoC Day $day --------------
-        cargo aoc input -d $day -y 2024
+        cargo aoc input -d $day -y 2023
         cargo aoc -d $day
     done
 
@@ -48,7 +48,7 @@ bench-all:
     #!/usr/bin/env bash
     for day in $(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h); do
         echo -------------- AoC Day $day --------------
-        cargo aoc input -d $day -y 2024
+        cargo aoc input -d $day -y 2023
         cargo aoc bench -d $day
     done
 
@@ -56,7 +56,7 @@ fetch-inputs:
     #!/usr/bin/env bash
     for day in $(ls src | grep day | sed 's/day//' | sed 's/.rs//' | sort -h); do
         echo -------------- AoC Day $day --------------
-        cargo aoc input -d $day -y 2024 &> /dev/null
+        cargo aoc input -d $day -y 2023 &> /dev/null
         if [ $? -ne 0 ]; then
             echo "Failed to fetch input for day $day"
         else

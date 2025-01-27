@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use aoc_runner_derive::{aoc, aoc_generator};
 use fxhash::FxHashSet;
 
-use crate::{common::MyMatrix, parsers::v_grid_no_whitespace};
+use aoc_utils::{common::MyMatrix, parsers::v_grid_no_whitespace};
 
 type Num = u16;
 

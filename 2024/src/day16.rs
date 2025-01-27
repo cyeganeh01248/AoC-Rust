@@ -4,8 +4,8 @@ use pathfinding::{
     prelude::{astar_bag_collect, dijkstra},
 };
 
-use crate::common::maze_solving::parse_maze_with_start_end;
-use crate::common::HashSet;
+use aoc_utils::common::maze_solving::parse_maze_with_start_end;
+use aoc_utils::common::HashSet;
 
 type Num = u64;
 

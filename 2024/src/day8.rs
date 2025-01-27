@@ -2,9 +2,9 @@
 
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::{common::MyMatrix, parsers::v_grid_no_whitespace};
+use aoc_utils::{common::MyMatrix, parsers::v_grid_no_whitespace};
 
-use crate::common::{HashMap, HashSet};
+use aoc_utils::common::{HashMap, HashSet};
 
 type Num = u16;
 

@@ -1,8 +1,8 @@
-use crate::common::HashMap;
 use aoc_runner_derive::{aoc, aoc_generator};
+use aoc_utils::common::HashMap;
 use std::cmp::Ordering;
 
-use crate::common::MyMatrix;
+use aoc_utils::common::MyMatrix;
 
 type Num = u16;
 

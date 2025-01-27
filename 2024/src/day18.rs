@@ -1,7 +1,7 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 use pathfinding::matrix::Matrix;
 
-use crate::common::maze_solving::solve_maze;
+use aoc_utils::common::maze_solving::solve_maze;
 
 #[aoc_generator(day18)]
 fn parse(input: &str) -> Vec<(u8, u8)> {
