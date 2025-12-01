@@ -33,6 +33,12 @@ bench DAY="":
 gen:
     cargo aoc input -g -y 2025
 
+gen-day DAY="":
+    #!/usr/bin/env bash
+    day={{DAY}}
+
+    cargo aoc input -g -y 2025 -d $day
+
 test-all:
     cargo test day
 

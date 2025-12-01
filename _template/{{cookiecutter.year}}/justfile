@@ -33,6 +33,12 @@ bench DAY="":
 gen:
     cargo aoc input -g -y {{ cookiecutter.year }}
 
+gen-day DAY="":
+    #!/usr/bin/env bash
+    day={{ "{{" }}DAY}}
+
+    cargo aoc input -g -y {{ cookiecutter.year }} -d $day
+
 test-all:
     cargo test day
 
