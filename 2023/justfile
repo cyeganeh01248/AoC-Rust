@@ -30,14 +30,14 @@ bench DAY="":
     cargo aoc input -d $day -y 2023
     cargo aoc bench -d $day
 
-gen DAY="":
+gen:
+    cargo aoc input -g -y 2023
+
+gen-day DAY="":
     #!/usr/bin/env bash
     day={{DAY}}
 
-    if [ "$day" == "" ]; then
-        day=$(date | awk '{print $3}')
-    fi
-    cargo aoc input -g -d $day -y 2023
+    cargo aoc input -g -y 2023 -d $day
 
 test-all:
     cargo test day
