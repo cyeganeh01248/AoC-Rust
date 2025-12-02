@@ -1,13 +1,13 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
 #[derive(Debug, Clone, Copy)]
-enum DIR {
+enum Dir {
     L,
     R,
 }
 
 #[aoc_generator(day1)]
-fn parse(input: &str) -> Vec<(DIR, i32)> {
+fn parse(input: &str) -> Vec<(Dir, i32)> {
     input
         .lines()
         .map(|line| {
@@ -16,8 +16,8 @@ fn parse(input: &str) -> Vec<(DIR, i32)> {
             let num_raw = chars.collect::<String>();
             (
                 match d_raw {
-                    'L' => DIR::L,
-                    'R' => DIR::R,
+                    'L' => Dir::L,
+                    'R' => Dir::R,
                     _ => panic!("Invalid direction"),
                 },
                 num_raw.parse().unwrap(),
@@ -27,13 +27,13 @@ fn parse(input: &str) -> Vec<(DIR, i32)> {
 }
 
 #[aoc(day1, part1)]
-fn part1(input: &[(DIR, i32)]) -> u32 {
+fn part1(input: &[(Dir, i32)]) -> u32 {
     let mut pos = 50;
     let mut count = 0;
     for (d, n) in input {
         match &d {
-            DIR::L => pos -= n,
-            DIR::R => pos += n,
+            Dir::L => pos -= n,
+            Dir::R => pos += n,
         }
         while pos < 0 {
             pos += 100;
@@ -48,21 +48,21 @@ fn part1(input: &[(DIR, i32)]) -> u32 {
 }
 
 #[aoc(day1, part2)]
-fn part2(input: &[(DIR, i32)]) -> i32 {
+fn part2(input: &[(Dir, i32)]) -> i32 {
     let mut pos = 50;
     let mut count = 0;
 
     for (d, n) in input {
         let pp = pos;
         count += match &d {
-            DIR::R => {
+            Dir::R => {
                 pos += n;
                 let c = pos / 100;
                 pos = pos.rem_euclid(100);
                 c
             }
-            DIR::L => {
-                pos = pos - n;
+            Dir::L => {
+                pos -= n;
                 let mut c = (pos / 100).abs();
                 if pos <= 0 && pp != 0 {
                     c += 1;

@@ -9,11 +9,29 @@ use pad::PadStr;
 
 pub type MyMatrix<T> = Vec<Vec<T>>;
 
-pub fn int_len<T>(num: T) -> u32
-where
-    f64: From<T>,
-{
-    f64::from(num).log10().floor() as u32 + 1u32
+pub fn ilen<T: Into<i128>>(num: T) -> u32 {
+    let n = num.into();
+    if n == 0 {
+        return 1;
+    }
+
+    let n_abs = if n == i128::MIN {
+        return 39;
+    } else if n < 0 {
+        -n
+    } else {
+        n
+    };
+
+    (n_abs).ilog10() as u32 + 1
+}
+pub fn uilen<T: Into<u128>>(num: T) -> u32 {
+    let n = num.into();
+    if n == 0 {
+        return 1;
+    }
+
+    n.ilog10() as u32 + 1
 }
 
 pub fn print_matrix<T>(matrix: &MyMatrix<T>)
