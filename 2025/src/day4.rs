@@ -1,17 +1,16 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 use aoc_utils::parsers::v_grid_no_whitespace;
 #[aoc_generator(day4)]
-fn parse(input: &str) -> Vec<Vec<String>> {
+fn parse(input: &str) -> Vec<Vec<char>> {
     v_grid_no_whitespace(input)
 }
 
-#[aoc(day4, part1)]
-fn part1(input: &Vec<Vec<String>>) -> u32 {
-    let mut count = 0;
+fn find_removeable(input: &Vec<Vec<char>>) -> Vec<(usize, usize)> {
+    let mut removeable = vec![];
 
     for r in 0..input.len() {
         for c in 0..input[r].len() {
-            if input[r][c] == "." {
+            if input[r][c] == '.' {
                 continue;
             }
             let mut found_count = 0;
@@ -28,7 +27,7 @@ fn part1(input: &Vec<Vec<String>>) -> u32 {
                         && nc < input[nr as usize].len() as isize
                         && nc >= 0
                     {
-                        if input[nr as usize][nc as usize] == "@" {
+                        if input[nr as usize][nc as usize] == '@' {
                             found_count += 1;
                         }
                     }
@@ -42,17 +41,33 @@ fn part1(input: &Vec<Vec<String>>) -> u32 {
             }
 
             if found_count < 4 {
-                println!("{} {}", r, c);
-                count += 1;
+                removeable.push((r, c))
             }
         }
     }
-    count
+    removeable
+}
+
+#[aoc(day4, part1)]
+fn part1(input: &Vec<Vec<char>>) -> usize {
+    find_removeable(input).len()
 }
 
 #[aoc(day4, part2)]
-fn part2(input: &Vec<Vec<String>>) -> u32 {
-    todo!()
+fn part2(input: &Vec<Vec<char>>) -> usize {
+    let mut input = input.clone();
+    let mut count = 0;
+    loop {
+        let removeable = find_removeable(&input);
+        if removeable.len() == 0 {
+            break;
+        }
+        count += removeable.len();
+        for (r, c) in removeable {
+            input[r][c] = '.';
+        }
+    }
+    count
 }
 
 #[cfg(test)]
@@ -79,6 +94,6 @@ mod tests {
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(&parse(EXAMPLE_INPUT)), 0);
+        assert_eq!(part2(&parse(EXAMPLE_INPUT)), 43);
     }
 }
