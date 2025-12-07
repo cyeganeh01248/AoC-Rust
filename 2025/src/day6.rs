@@ -13,27 +13,17 @@ fn parse(input: &str) -> Vec<String> {
 
 #[aoc(day6, part1)]
 fn part1(input: &Vec<String>) -> u128 {
-    let input = input
-        .clone()
-        .into_iter()
-        .map(|line| {
-            line.split(" ")
-                .map(String::from)
-                .filter(|n| n.len() > 0)
-                .collect::<Vec<_>>()
-        })
-        .collect::<Vec<_>>();
     let nums = input[0..(input.len() - 1)]
         .iter()
-        .map(|row| {
-            row.iter()
+        .map(|line| {
+            line.split_whitespace()
                 .map(|d| d.parse::<u128>().unwrap())
                 .collect::<Vec<_>>()
         })
         .collect::<Vec<_>>();
     let signs = input[input.len() - 1]
-        .iter()
-        .map(|op| match op.as_str() {
+        .split_whitespace()
+        .map(|op| match op {
             "+" => Op::Add,
             "*" => Op::Mul,
             _ => unreachable!("Invalid operator"),
@@ -82,18 +72,17 @@ pub fn rotate_90_ccw<T: Clone>(grid: Vec<Vec<T>>) -> Vec<Vec<T>> {
 #[aoc(day6, part2)]
 fn part2(input: &Vec<String>) -> u128 {
     let input = input
-        .clone()
-        .into_iter()
+        .iter()
         .map(|line| line.chars().collect::<Vec<_>>())
         .collect::<Vec<_>>();
     let input = rotate_90_ccw(input);
 
     let rows = input
         .iter()
-        .map(|n| n.iter().collect::<String>().replace(" ", ""))
+        .map(|n| n.iter().filter(|&&c| c != ' ').collect::<String>())
         .collect::<Vec<_>>();
 
-    let num_problems = rows.iter().filter(|&n| n == &"".to_string()).count() + 1;
+    let num_problems = rows.iter().filter(|n| n.is_empty()).count() + 1;
 
     let mut signs = Vec::with_capacity(num_problems);
     let mut results = Vec::with_capacity(num_problems);
@@ -101,9 +90,8 @@ fn part2(input: &Vec<String>) -> u128 {
     nums.push(Vec::new());
 
     let mut p = 0;
-    for i in 0..rows.len() {
-        let row = rows[i].clone();
-        if row == "".to_string() {
+    for row in &rows {
+        if row.is_empty() {
             p += 1;
             nums.push(Vec::new());
             continue;
@@ -117,7 +105,7 @@ fn part2(input: &Vec<String>) -> u128 {
             results.push(1);
             nums[p].push(row[0..(row.len() - 1)].parse::<u128>().unwrap());
         } else {
-            nums[p].push(rows[i].parse().unwrap());
+            nums[p].push(row.parse().unwrap());
         }
     }
 
