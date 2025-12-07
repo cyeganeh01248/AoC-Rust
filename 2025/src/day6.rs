@@ -58,31 +58,85 @@ fn part1(input: &Vec<String>) -> u128 {
     results.iter().sum()
 }
 
-// |123 328  51 64
-// | 45 64  387 23
-// |  6 98  215 314
-// *   +   *   +
+pub fn rotate_90_ccw<T: Clone>(grid: Vec<Vec<T>>) -> Vec<Vec<T>> {
+    if grid.is_empty() {
+        return grid;
+    }
 
-// The rightmost problem is 4 + 431 + 623 = 1058
-// The second problem from the right is 175 * 581 * 32 = 3253600
-// The third problem from the right is 8 + 248 + 369 = 625
-// Finally, the leftmost problem is 356 * 24 * 1 = 8544
+    let rows = grid.len();
+    let cols = grid[0].len();
+
+    let mut rotated = vec![vec![]; cols];
+
+    for col in (0..cols).rev() {
+        let mut new_row = Vec::with_capacity(rows);
+        for row in 0..rows {
+            new_row.push(grid[row][col].clone());
+        }
+        rotated[cols - 1 - col] = new_row;
+    }
+
+    rotated
+}
 
 #[aoc(day6, part2)]
-fn part2(input: &[String]) -> String {
-    todo!()
+fn part2(input: &Vec<String>) -> u128 {
+    let input = input
+        .clone()
+        .into_iter()
+        .map(|line| line.chars().collect::<Vec<_>>())
+        .collect::<Vec<_>>();
+    let input = rotate_90_ccw(input);
+
+    let rows = input
+        .iter()
+        .map(|n| n.iter().collect::<String>().replace(" ", ""))
+        .collect::<Vec<_>>();
+
+    let num_problems = rows.iter().filter(|&n| n == &"".to_string()).count() + 1;
+
+    let mut signs = Vec::with_capacity(num_problems);
+    let mut results = Vec::with_capacity(num_problems);
+    let mut nums = Vec::with_capacity(num_problems);
+    nums.push(Vec::new());
+
+    let mut p = 0;
+    for i in 0..rows.len() {
+        let row = rows[i].clone();
+        if row == "".to_string() {
+            p += 1;
+            nums.push(Vec::new());
+            continue;
+        }
+        if row.contains("+") {
+            signs.push(Op::Add);
+            results.push(0);
+            nums[p].push(row[0..(row.len() - 1)].parse::<u128>().unwrap());
+        } else if row.contains("*") {
+            signs.push(Op::Mul);
+            results.push(1);
+            nums[p].push(row[0..(row.len() - 1)].parse::<u128>().unwrap());
+        } else {
+            nums[p].push(rows[i].parse().unwrap());
+        }
+    }
+
+    nums.iter()
+        .enumerate()
+        .map(|(r, row)| match signs[r] {
+            Op::Add => row.iter().sum::<u128>(),
+            Op::Mul => row.iter().product::<u128>(),
+        })
+        .sum()
 }
 
 #[cfg(test)]
+    #[rustfmt::skip]
 mod tests {
     use super::*;
     use indoc::indoc;
 
-    const EXAMPLE_INPUT: &str = indoc! {"
-        123 328  51 64
-         45 64  387 23
-          6 98  215 314
-        *   +   *   +  "};
+    const EXAMPLE_INPUT: &str = indoc! {"123 328  51 64 \n 45 64  387 23 \n  6 98  215 314\n*   +   *   +  "};
 
     #[test]
     fn part1_example() {
@@ -91,6 +145,6 @@ mod tests {
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(&parse(EXAMPLE_INPUT)), "<RESULT>");
+        assert_eq!(part2(&parse(EXAMPLE_INPUT)), 3263827);
     }
 }
