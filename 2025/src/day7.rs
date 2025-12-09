@@ -32,7 +32,6 @@ fn part1((start, input, height): &(usize, HashMap<usize, Vec<usize>>, usize)) ->
         let mut new_cols = cols_to_check.clone();
         for col in cols_to_check.iter() {
             if row.contains(col) {
-                println!("Colision at {r} {col}");
                 count += 1;
                 new_cols.remove(&col);
                 new_cols.insert(col + 1);

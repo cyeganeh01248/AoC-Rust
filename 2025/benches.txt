@@ -1,0 +1,114 @@
+-------------- AoC Day 1 --------------
+Day1 - Part1/(default)  time:   [23.666 µs 23.892 µs 24.143 µs]
+                        change: [-6.7681% -4.8068% -2.8806%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+
+Day1 - Part2/(default)  time:   [19.120 µs 19.376 µs 19.680 µs]
+                        change: [+0.3413% +1.6422% +3.0332%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+
+-------------- AoC Day 2 --------------
+Day2 - Part1/(default)  time:   [32.021 ms 32.611 ms 33.366 ms]
+                        change: [-11.707% -9.7061% -7.4406%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 9 outliers among 100 measurements (9.00%)
+  4 (4.00%) high mild
+  5 (5.00%) high severe
+
+Day2 - Part2/(default)  time:   [272.12 ms 273.61 ms 275.23 ms]
+                        change: [-10.233% -9.1824% -8.0414%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+
+-------------- AoC Day 3 --------------
+Day3 - Part1/(default)  time:   [32.186 µs 32.449 µs 32.760 µs]
+                        change: [-8.7990% -6.9338% -5.1638%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+
+Day3 - Part2/(default)  time:   [50.427 ms 50.879 ms 51.359 ms]
+                        change: [-0.1142% +1.3064% +2.6744%] (p = 0.07 > 0.05)
+                        No change in performance detected.
+Found 7 outliers among 100 measurements (7.00%)
+  5 (5.00%) high mild
+  2 (2.00%) high severe
+
+-------------- AoC Day 4 --------------
+Day4 - Part1/(default)  time:   [909.50 µs 915.86 µs 923.18 µs]
+                        change: [-12.388% -10.973% -9.5739%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 8 outliers among 100 measurements (8.00%)
+  8 (8.00%) high mild
+
+Day4 - Part2/(default)  time:   [3.1141 ms 3.1418 ms 3.1707 ms]
+                        change: [-3.5212% -2.1928% -0.8252%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 7 outliers among 100 measurements (7.00%)
+  7 (7.00%) high mild
+
+-------------- AoC Day 5 --------------
+Day5 - Part1/(default)  time:   [237.82 µs 240.83 µs 244.27 µs]
+                        change: [+0.8586% +2.2578% +3.7372%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 8 outliers among 100 measurements (8.00%)
+  6 (6.00%) high mild
+  2 (2.00%) high severe
+
+Day5 - Part2/(default)  time:   [95.099 µs 96.046 µs 97.146 µs]
+                        change: [-0.8481% +0.3386% +1.5506%] (p = 0.57 > 0.05)
+                        No change in performance detected.
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high severe
+
+-------------- AoC Day 6 --------------
+Day6 - Part1/(default)  time:   [93.137 µs 94.011 µs 94.961 µs]
+                        change: [-0.7454% +0.4720% +1.5124%] (p = 0.42 > 0.05)
+                        No change in performance detected.
+Found 8 outliers among 100 measurements (8.00%)
+  8 (8.00%) high mild
+
+Day6 - Part2/(default)  time:   [522.93 µs 528.95 µs 535.53 µs]
+                        change: [-2.4635% -1.3653% -0.1201%] (p = 0.02 < 0.05)
+                        Change within noise threshold.
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+
+-------------- AoC Day 7 --------------
+Day7 - Part1/(default)  time:   [83.934 µs 84.503 µs 85.153 µs]
+                        change: [-95.548% -95.454% -95.357%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 7 outliers among 100 measurements (7.00%)
+  5 (5.00%) high mild
+  2 (2.00%) high severe
+
+Day7 - Part2/(default)  time:   [85.438 µs 87.048 µs 88.965 µs]
+                        change: [-24.965% -23.385% -21.646%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 7 outliers among 100 measurements (7.00%)
+  4 (4.00%) high mild
+  3 (3.00%) high severe
+
+-------------- AoC Day 8 --------------
+Day8 - Part1/(default)  time:   [475.46 µs 480.11 µs 485.40 µs]
+                        change: [-21.097% -19.743% -18.478%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 8 outliers among 100 measurements (8.00%)
+  7 (7.00%) high mild
+  1 (1.00%) high severe
+
+Day8 - Part2/(default)  time:   [917.92 µs 927.80 µs 938.54 µs]
+                        change: [-41.571% -39.072% -36.435%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) high mild
+  1 (1.00%) high severe
+

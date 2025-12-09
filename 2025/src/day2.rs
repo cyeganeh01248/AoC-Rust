@@ -45,7 +45,6 @@ fn part2(input: &[(i64, i64)]) -> i64 {
                     continue;
                 }
                 if is_repeated_sequence(&n_s, partion_width) {
-                    // println!("{n}");
                     sum += n;
                     break;
                 }
@@ -86,7 +85,6 @@ mod tests {
 
     #[test]
     fn part1_example() {
-        println!("{EXAMPLE_STR:?}");
         assert_eq!(part1(&parse(EXAMPLE_STR)), 1227775554);
     }
 

@@ -4,7 +4,7 @@ use fxhash::FxHashMap;
 type Point3d = (i64, i64, i64);
 
 #[aoc_generator(day8)]
-fn parse(input: &str) -> Vec<(Point3d, Point3d)> {
+fn parse(input: &str) -> (Vec<(Point3d, Point3d)>, usize) {
     let points = input
         .lines()
         .map(|line| {
@@ -20,19 +20,22 @@ fn parse(input: &str) -> Vec<(Point3d, Point3d)> {
         for p2_i in (p1_i + 1)..points.len() {
             let p1 = points[p1_i];
             let p2 = points[p2_i];
-            let distance = ((p1.0 - p2.0).pow(2) + (p1.1 - p2.1).pow(2) + (p1.2 - p2.2).pow(2));
+            let distance = (p1.0 - p2.0).pow(2) + (p1.1 - p2.1).pow(2) + (p1.2 - p2.2).pow(2);
             points_distance.push((p1, p2, distance));
         }
     }
     points_distance.sort_by(|a, b| a.2.cmp(&b.2));
-    points_distance
-        .iter()
-        .map(|a| (a.0, a.1))
-        .collect::<Vec<_>>()
+    (
+        points_distance
+            .iter()
+            .map(|a| (a.0, a.1))
+            .collect::<Vec<_>>(),
+        points.len(),
+    )
 }
 
 #[aoc(day8, part1)]
-fn part1(input: &Vec<(Point3d, Point3d)>) -> u32 {
+fn part1((input, _): &(Vec<(Point3d, Point3d)>, usize)) -> u32 {
     let input = input.iter().take(1000).collect::<Vec<_>>();
     let mut point_groups = FxHashMap::default();
 
@@ -67,8 +70,48 @@ fn part1(input: &Vec<(Point3d, Point3d)>) -> u32 {
 }
 
 #[aoc(day8, part2)]
-fn part2(input: &Vec<(Point3d, Point3d)>) -> String {
-    todo!()
+fn part2((input, n): &(Vec<(Point3d, Point3d)>, usize)) -> i64 {
+    let input = input.iter().collect::<Vec<_>>();
+    let mut point_groups = FxHashMap::default();
+
+    let mut min_group = 1;
+    let mut group_count = *n;
+
+    let mut final_a = 0;
+    let mut final_b = 0;
+
+    for (a, b) in input {
+        let a_group = *point_groups.get(a).unwrap_or(&0);
+        let b_group = *point_groups.get(b).unwrap_or(&0);
+        if a_group != 0 && b_group != 0 {
+            if a_group != b_group {
+                group_count -= 1;
+                for (_, v) in point_groups.iter_mut() {
+                    if *v == b_group {
+                        *v = a_group;
+                    }
+                }
+            }
+        } else if a_group != 0 {
+            group_count -= 1;
+            point_groups.insert(*b, a_group);
+        } else if b_group != 0 {
+            group_count -= 1;
+            point_groups.insert(*a, b_group);
+        } else {
+            group_count -= 1;
+            point_groups.insert(*a, min_group);
+            point_groups.insert(*b, min_group);
+            min_group += 1;
+        }
+        if group_count == 1 {
+            final_a = a.0;
+            final_b = b.0;
+
+            break;
+        }
+    }
+    final_a * final_b
 }
 
 #[cfg(test)]
@@ -102,13 +145,13 @@ mod tests {
     #[test]
     fn part1_example() {
         assert_eq!(
-            part1(&parse(EXAMPLE_INPUT).into_iter().take(10).collect()),
+            part1(&(parse(EXAMPLE_INPUT).0.into_iter().take(10).collect(), 1)),
             40
         );
     }
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(&parse(EXAMPLE_INPUT)), "<RESULT>");
+        assert_eq!(part2(&parse(EXAMPLE_INPUT)), 25272);
     }
 }
